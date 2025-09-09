@@ -1,11 +1,12 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
+import secrets
 
 app = Flask(__name__)
-
+app.secret_key = secrets.token_hex(16)
 
 @app.route("/")
 def index():
@@ -14,12 +15,12 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form["Käyttäjänimi"]
+        username = request.form["username"]
         password = request.form["Salasana"]
         password2 = request.form["Salasana uudestaan"]
         
         if not strong_password(password):
-            return render_template("register.html", error="Salasanantulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki")
+            return render_template("register.html", error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki")
 
         if password != password2:
             return render_template("register.html", error="Salasanat eivät täsmää")
@@ -52,6 +53,8 @@ def login():
             user = connecting.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
 
         if user and check_password_hash(user["password"], password):
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
             return redirect("/paivakirja")
         else:
             return render_template("login.html", error="Hupsis, tarkista käyttäjätunnus tai salasana")
@@ -59,9 +62,46 @@ def login():
     return render_template("login.html")
     
 
+
 @app.route("/paivakirja")
 def diary():
-    return "Päiväkirja tulossa pian!"
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    connecting = get_db_connection()
+    entries = connecting.execute(
+        "SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC",
+        (session["user_id"],)
+    ).fetchall()
+    connecting.close()
+
+    return render_template("paivakirja.html", entries=entries, username=session["username"])
+
+@app.route("/uusijuoksu", methods=["POST"])
+def add_entry():
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    km = request.form["km"]
+    m = request.form["m"]
+    time = request.form["time"]
+    terrain = request.form["terrain"]
+    run_type = request.form["run_type"]
+    race_name = request.form.get("race_name")
+
+    connecting = get_db_connection()
+    connecting.execute(
+        """INSERT INTO entries (user_id, distance_km, distance_m, time, terrain, run_type, race_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (session["user_id"], km, m, time, terrain, run_type, race_name)
+    )
+    
+    connecting.commit()
+    connecting.close()
+
+    return redirect("/paivakirja")
+    
+    
 
 @app.route("/kisat")
 def competitions():
