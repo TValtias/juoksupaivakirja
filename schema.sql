@@ -13,6 +13,9 @@ CREATE TABLE entries (
     terrain TEXT NOT NULL,
     run_type TEXT NOT NULL,
     race_name TEXT,
+    other TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE INDEX inx_user:id ON entries(user_id);

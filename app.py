@@ -62,18 +62,16 @@ def login():
     return render_template("login.html")
     
 
-
 @app.route("/paivakirja")
 def diary():
     if "user_id" not in session:
         return redirect("/login")
     
-    connecting = get_db_connection()
-    entries = connecting.execute(
-        "SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC",
-        (session["user_id"],)
-    ).fetchall()
-    connecting.close()
+    with get_db_connection() as connecting:
+        entries = connecting.execute(
+            "SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC",
+            (session["user_id"],)
+        ).fetchall()
 
     return render_template("paivakirja.html", entries=entries, username=session["username"])
 
@@ -88,19 +86,72 @@ def add_entry():
     terrain = request.form["terrain"]
     run_type = request.form["run_type"]
     race_name = request.form.get("race_name")
+    other = request.form["other"]
 
-    connecting = get_db_connection()
-    connecting.execute(
-        """INSERT INTO entries (user_id, distance_km, distance_m, time, terrain, run_type, race_name)
-            VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (session["user_id"], km, m, time, terrain, run_type, race_name)
-    )
-    
-    connecting.commit()
-    connecting.close()
+    if not km or not m or not time or not terrain or not run_type:
+        return render_template("paivakirja.html", error="Tarkista, että * merkityt kentät on täytetty.")
+
+    with get_db_connection() as connecting:
+        connecting.execute(
+            """INSERT INTO entries (user_id, distance_km, distance_m, time, terrain, run_type, race_name, other)
+                VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (session["user_id"], km, m, time, terrain, run_type, race_name, other)
+        )
 
     return redirect("/paivakirja")
     
+@app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
+def edit_entry(entry_id):
+    if "user_id" not in session:
+        return redirect("login")
+    
+    with get_db_connection() as connecting:
+        entry = connecting.execute(
+            "SELECT * FROM entries WHERE id = ? AND user_id = ?",
+            (entry_id, session["user_id"])
+        ).fetchone()
+
+    if entry is None:
+        connecting.close()
+        return "Muokattavaa merkintää ei löytynyt", 403
+    
+    if request.method == "POST":
+        km = request.form["km"]
+        m = request.form["m"]
+        time = request.form["time"]
+        terrain = request.form["terrain"]
+        run_type = request.form["run_type"]
+        race_name = request.form.get("race_name")
+        other = request.form["other"]
+
+        if not km or not m or not time or not terrain or not run_type:
+            return render_template("edit_entry.html", entry=entry, error="Tarkista, että * merkityt kentät on täytetty.")
+            
+        with get_db_connection() as connecting:
+            connecting.execute(
+                """UPDATE entries
+                    SET distance_km = ?, distance_m = ?, time = ?, terrain = ?, run_type = ?, race_name = ?, other = ?
+                    WHERE id = ? AND user_id = ?""",
+                    (km, m, time, terrain, run_type, race_name, other, entry_id, session["user_id"])
+            )
+            connecting.commit()
+       
+        return redirect("/paivakirja")
+
+    return render_template("edit_entry.html", entry = entry)
+
+@app.route("/delete_entry/<int:entry_id>", methods=["POST"])
+def delete_entry(entry_id):
+    if "user_id" not in session:
+        return redirect("/login")
+    
+    with get_db_connection() as connecting:
+        connecting.execute(
+            "DELETE FROM entries WHERE id = ? AND user_id = ?",
+            (entry_id, session["user_id"])
+    )
+    connecting.commit()
+    return redirect("/paivakirja")
     
 
 @app.route("/kisat")
