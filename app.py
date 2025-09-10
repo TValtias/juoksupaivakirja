@@ -190,7 +190,7 @@ def browse_runs():
     
 
 @app.route("/kisat")
-def competitions()
+def competitions():
     return "Kisat tulossa pian!"
 
 @app.route("/kayttaja/<int:page_id>")

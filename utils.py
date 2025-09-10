@@ -3,7 +3,7 @@ import sqlite3
 
 
 
-def ger_db_connection():
+def get_db_connection():
     connecting = sqlite3.connect("database.db")
 
     connecting.row_factory = sqlite3.Row
