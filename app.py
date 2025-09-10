@@ -112,7 +112,6 @@ def edit_entry(entry_id):
         ).fetchone()
 
     if entry is None:
-        connecting.close()
         return "Muokattavaa merkintää ei löytynyt", 403
     
     if request.method == "POST":
@@ -163,7 +162,7 @@ def browse_runs():
 
 
     search = """
-            SELECT entries.* users.username
+            SELECT entries.*, users.username
             FROM entries
             JOIN users ON entries.user_id = users.id
             WHERE 1=1
