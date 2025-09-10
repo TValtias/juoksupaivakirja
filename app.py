@@ -153,9 +153,45 @@ def delete_entry(entry_id):
     connecting.commit()
     return redirect("/paivakirja")
     
+@app.route("/browseruns", methods=["GET"])
+def browse_runs():
+
+    km = request.args.get("km")
+    terrain = request.args.get("terrain")
+    run_type = request.args.get("run_type")
+    username = request.args.get("username")
+
+
+    search = """
+            SELECT entries.* users.username
+            FROM entries
+            JOIN users ON entries.user_id = users.id
+            WHERE 1=1
+            """
+    search_conditions = []
+    if km:
+        search += " AND entries.distance_km = ?"
+        search_conditions.append(km)
+    if terrain:
+        search += " AND entries.terrain = ?"
+        search_conditions.append(terrain)
+    if run_type:
+        search += " AND entries.run_type = ?"
+        search_conditions.append(run_type)
+    if username:
+        search += " AND users.username LIKE ?"
+        search_conditions.append(f"%{username}%")
+
+    search += " ORDER BY entries.created_at DESC"
+
+    with get_db_connection() as connecting:
+        runs = connecting.execute(search, search_conditions).fetchall()
+
+    return render_template("browseruns.html", runs=runs)
+    
 
 @app.route("/kisat")
-def competitions():
+def competitions()
     return "Kisat tulossa pian!"
 
 @app.route("/kayttaja/<int:page_id>")
