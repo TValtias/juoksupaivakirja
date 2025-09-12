@@ -3,35 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juoksupäiväkirja</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Linkki CSS-tiedostoon -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="script.js" defer></script> <!-- Linkki JavaScript-tiedostoon -->
 </head>
 <body>
-    <header>
-        <h1>Tervetuloa Juoksupäiväkirjaan!</h1>
-        <nav>
+    <header class="banner">
+        <nav class="nav-links">
             <ul>
-                <li><a href="/">Etusivu</a></li>
-                <li><a href="/register">Rekisteröidy</a></li>
-                <li><a href="/login">Kirjaudu sisään</a></li>
-                <li><a href="/paivakirja">Päiväkirja</a></li>
-                <li><a href="/browseruns">Selaa juoksuja</a></li>
+                <li>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lenkkipolku logo" class="banner-logo">
+                </li>
+                <li><a href="/">ETUSIVU</a></li>
+                <li><a href="/register">REKISTERÖIDY</a></li>
+                <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
+                <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
+                <li><a href="/browseruns">SELAA</a></li>
+                <li><a href="/kisat">KISAT</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <section>
-            <h2>Otsikko</h2>
-            <p>edit.edit.edit</p>
+    <div class="top-banner">
+            <a href="{{ url_for('index') }}">
+                <img src="{{ url_for('static', filename='images/alt_2.png') }}" alt="Lenkkipolku banneri" class="alt-banner">
+            </a>
+    </div>
+
+    <main class="body">
+
+        <section class="right-text-section">
+            <div class="text-right">
+                <p>Tervetuloa jokaisen juoksijan päiväkirjaan.<br /> Olit sitten aloittelija, konkari tai kilpailija,</p>
+                <p>olet juoksija</p>
+            <div>
+        </section>
+        <section class="right-text-section">
+            <img src="{{ url_for('static', filename='images/etusivu1.png') }}" alt="Nainen juoksee hiekka maastossa" class="pic-left">
+            <div class="text-right">
+                <h1>Haasta itsesi</h1>
+                <p>Oletko valmis uuteen seikkailuun?</p>
+            <div>
+        </section>
+
+        <section class="left-text-section">
+            <div class="text-left">
+                <h2>Seuraa kehitystäsi</h2>
+                <p>Juokse pidemmälle kuin koskaan ennen</p>
+            </div>
+            <img src="{{ url_for('static', filename='images/etusivu2.png') }}" alt="Mies juoksee" class="pic-right">
+        </section>
+
+        </section>
+        <section class="right-text-section">
+            <img src="{{ url_for('static', filename='images/etusivu3.png') }}" alt="Kaksi ihmistä hölkkää" class="pic-left">
+            <div class="text-right">
+                <h1>Ole osa yhteisöä</h1>
+                <p>Inspiroidu ja keskustele</p>
+            <div>
         </section>
 
         <section>
-            <h2>Toinen osio</h2>
-            <p>edit.edit.edit</p>
+            <h1>Täysin ilmainen</h1>
+            <p>Liity juoksijoiden yhteisöön  </p>
+            <a href="{{ url_for('register') }}">
+                <img src="{{ url_for('static', filename='images/rekisteroidy.png') }}" alt="Liity mukaan" class="kuva-linkki">
+            </a>
         </section>
-    </main>
+        <section>
+            <h2>Fani vai haastaja?</h2>
+            <p>Seuraa tulevia ja menneitä kisoja</p>
+            <a href="{{ url_for('competitions') }}">
+                <img src="{{ url_for('static', filename='images/selaa_kisoja.png') }}" alt="Kisasivut" class="kuva-linkki">
+            </a>
+        </section>
 
     <footer>
         <p>&copy; 2025 Juoksupäiväkirja. Kaikki oikeudet pidätetään.</p>
