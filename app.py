@@ -10,14 +10,14 @@ app.secret_key = secrets.token_hex(16)
 
 @app.route("/")
 def index():
-    return "Tähän tulee juoksupäiväkirja"
+    return render_template("base.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
-        password = request.form["Salasana"]
-        password2 = request.form["Salasana uudestaan"]
+        password = request.form["password"]
+        password2 = request.form["password2"]
         
         if not strong_password(password):
             return render_template("register.html", error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki")
@@ -191,8 +191,12 @@ def browse_runs():
 
 @app.route("/kisat")
 def competitions():
-    return "Kisat tulossa pian!"
+    return render_template("kisat.html")
 
 @app.route("/kayttaja/<int:page_id>")
 def user_page(page_id):
     return "Käyttäjien sivut tulossa pian!"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
