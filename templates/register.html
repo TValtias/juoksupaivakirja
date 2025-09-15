@@ -33,7 +33,10 @@
             <p> * kohdat pakollisia</p>
         </section>
 
-        <form class="register-form" metrhod="POST" action="/register">
+        {%if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form class="register-form" method="POST" action="/register">
 
             <label for="fname">Etunimi*:</label>
             <input type="text" id="fname" name="fname" placeholder="Etunimesi" required>

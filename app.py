@@ -29,7 +29,7 @@ def register():
         
         connecting = get_db_connection()
         try: 
-            connecting.execute("INSERT INTO users (username, password) VALUES (?, ?)",
+            connecting.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)",
                 (username, hashing_pass))
             connecting.commit()
         
@@ -46,8 +46,8 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method =="POST":
-        username = request.form["käyttäjänimi"]
-        password = request.form["Salasana"]
+        username = request.form["username"]
+        password = request.form["password"]
 
         with get_db_connection() as connecting:
             user = connecting.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()

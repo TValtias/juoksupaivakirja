@@ -18,4 +18,4 @@ CREATE TABLE entries (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE INDEX inx_user:id ON entries(user_id);
+CREATE INDEX idx_user_id ON entries(user_id);
