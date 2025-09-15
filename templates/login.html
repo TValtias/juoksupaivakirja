@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juoksupäiväkirja</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Linkki CSS-tiedostoon -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="script.js" defer></script> <!-- Linkki JavaScript-tiedostoon -->
 </head>
 <body>
-    <header>
-        <h1>Tervetuloa Juoksupäiväkirjaan!</h1>
-        <nav>
+    <header class="banner">
+        <nav class="nav-links">
             <ul>
-                <li><a href="/">Etusivu</a></li>
-                <li><a href="/register">Rekisteröidy</a></li>
-                <li><a href="/login">Kirjaudu sisään</a></li>
-                <li><a href="/paivakirja">Päiväkirja</a></li>
-                <li><a href="/browseruns">Selaa juoksuja</a></li>
+                <li>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lenkkipolku logo" class="banner-logo">
+                </li>
+                <li><a href="/">ETUSIVU</a></li>
+                <li><a href="/register">REKISTERÖIDY</a></li>
+                <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
+                <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
+                <li><a href="/browseruns">SELAA</a></li>
+                <li><a href="/kisat">KISAT</a></li>
             </ul>
         </nav>
     </header>
