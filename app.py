@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
 import secrets
@@ -52,12 +52,12 @@ def login():
         with get_db_connection() as connecting:
             user = connecting.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
 
-        if user and check_password_hash(user["password"], password):
+        if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
-            return redirect("/paivakirja")
+            return redirect(url_for("diary"))
         else:
-            return render_template("login.html", error="Hupsis, tarkista käyttäjätunnus tai salasana")
+            return render_template("login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
         
     return render_template("login.html")
     
@@ -94,10 +94,10 @@ def add_entry():
     with get_db_connection() as connecting:
         connecting.execute(
             """INSERT INTO entries (user_id, distance_km, distance_m, time, terrain, run_type, race_name, other)
-                VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                 (session["user_id"], km, m, time, terrain, run_type, race_name, other)
         )
-
+        connecting.commit()
     return redirect("/paivakirja")
     
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
