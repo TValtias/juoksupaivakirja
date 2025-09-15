@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="script.js" defer></script> <!-- Linkki JavaScript-tiedostoon -->
 </head>
 <body>
     <header class="banner">
@@ -23,15 +22,32 @@
         </nav>
     </header>
 
+    <div class="top-banner">
+        <h2>Kirjaudu sisään</h2>
+    </div>
+
     <main>
         <section>
-            <h2>Otsikko</h2>
-            <p>edit.edit.edit</p>
+            <h2>Kirjaudu sisään</h2>
+            <p> Anna kirjautumistietosi</p>
         </section>
 
+        {%if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form class="register-form" method="POST" action="/login">
+
+            <label for="username">Käyttäjänimi:</label>
+            <input type="text" id="username" name="username" placeholder="Anna käyttäjänimesi" required>
+
+            <label for="password">Salasana:</label>
+            <input type="password" id="password" name="password" placeholder="Anna salasanasi" required>
+
+            <button type="submit">Kirjaudu sisään</button>
+        </form>
+
         <section>
-            <h2>Toinen osio</h2>
-            <p>edit.edit.edit</p>
+            <p>Kirjaudu sisään, että voit tarkastella päiväkirjamerkintöjäsi</p>
         </section>
     </main>
 
