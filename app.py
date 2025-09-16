@@ -6,7 +6,7 @@ from utils import get_db_connection, strong_password
 import secrets
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(16)
+app.secret_key = "2HW?ei123#4_HE034nw!-jU4Mn2&!?f"
 
 @app.route("/")
 def index():
@@ -55,11 +55,17 @@ def login():
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
+            session["session_token"] = secrets.token_hex(16)
             return redirect(url_for("diary"))
         else:
             return render_template("login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
         
     return render_template("login.html")
+
+@app.route("/logout",)
+def logout():
+    session.clear()
+    return redirect("/login")
     
 
 @app.route("/paivakirja")
@@ -75,31 +81,35 @@ def diary():
 
     return render_template("paivakirja.html", entries=entries, username=session["username"])
 
-@app.route("/uusijuoksu", methods=["POST"])
+@app.route("/uusijuoksu", methods=["GET", "POST"])
 def add_entry():
+
     if "user_id" not in session:
         return redirect("/login")
     
-    km = request.form["km"]
-    m = request.form["m"]
-    time = request.form["time"]
-    terrain = request.form["terrain"]
-    run_type = request.form["run_type"]
-    race_name = request.form.get("race_name")
-    other = request.form["other"]
+    if request.method == "POST":
+        km = request.form.get("km")
+        m = request.form.get("m")
+        runtime = request.form.get("runtime")
+        terrain = request.form.get("terrain")
+        run_type = request.form.get("run_type")
+        race_name = request.form.get("race_name")
+        other = request.form.get("other")
 
-    if not km or not m or not time or not terrain or not run_type:
-        return render_template("paivakirja.html", error="Tarkista, että * merkityt kentät on täytetty.")
+        if not km or not m or not runtime or not terrain or not run_type:
+            return render_template("add_entry.html", error="Tarkista, että * merkityt kentät on täytetty.")
 
-    with get_db_connection() as connecting:
-        connecting.execute(
-            """INSERT INTO entries (user_id, distance_km, distance_m, time, terrain, run_type, race_name, other)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-                (session["user_id"], km, m, time, terrain, run_type, race_name, other)
-        )
-        connecting.commit()
-    return redirect("/paivakirja")
+        with get_db_connection() as connecting:
+            connecting.execute(
+                """INSERT INTO entries (user_id, distance_km, distance_m, runtime, terrain, run_type, race_name, other)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (session["user_id"], km, m, runtime, terrain, run_type, race_name, other)
+            )
+            connecting.commit()
+        return redirect("/paivakirja")
     
+    return render_template("add_entry.html")
+        
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
     if "user_id" not in session:

@@ -9,7 +9,7 @@ CREATE TABLE entries (
     user_id INTEGER NOT NULL,
     distance_km INTEGER NOT NULL,
     distance_m INTEGER NOT NULL,
-    time TEXT NOT NULL,
+    runtime TEXT NOT NULL,
     terrain TEXT NOT NULL,
     run_type TEXT NOT NULL,
     race_name TEXT,
