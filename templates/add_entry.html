@@ -13,7 +13,7 @@
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lenkkipolku logo" class="banner-logo">
                 </li>
                 <li><a href="/">ETUSIVU</a></li>
-                <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
+                <li><a href="/register">REKISTERÖIDY</a></li>
                 <li><a href="/logout">KIRJAUDU ULOS</a></li>
                 <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
                 <li><a href="/browseruns">SELAA</a></li>
@@ -23,25 +23,29 @@
     </header>
 
     <div class="top-banner">
-        <h2>Etsi päiväkirjamerkintöjä</h2>
-        <p>Etsi eri hakuehdoilla:</p>
+        <h2>Rekisteröidy käyttäjäksi</h2>
     </div>
 
     <main>
+        <section>
+            <h2>Uusi juoksu</h2>
+            <p> * kohdat pakollisia</p>
+        </section>
 
         {%if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
-        <form method="GET" action="{{ url_for('browse_runs')}}">
-            <label>Käyttäjä:</label>
-            <input type="text" name="username" placeholder="käyttäjänimi">
-            <p></p>
-            <label> Juoksun pituus:</label>
+        <form class="entry-form" method="POST" action="{{ url_for('add_entry') }}">
+            <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
-                <input type="number" name="km" placeholder="km" min="0">
+                <input type="number" name="km" placeholder="km" min="0" required>
+                <input type="number" name="m" placeholder="m" min="0" required>
             </div>
-            <p></p>
-            <label for="terrain">Maasto:</label>
+
+            <label>Aika (hh:mm:ss)*:</label>
+            <input type="text" name="runtime" placeholder="esim 00:25:30" required>
+            
+            <label>Maasto*:</label>
             <div class="checkbox-group">
                 <label><input type="checkbox" name="terrain" value="juoksumatto">Juoksumatto</label>
                 <label><input type="checkbox" name="terrain" value="katu">Katu</label>
@@ -49,48 +53,22 @@
                 <label><input type="checkbox" name="terrain" value="hiekkatie">Hiekkatie</label>
                 <label><input type="checkbox" name="terrain" value="metsä/epätasainen">Metsä/epätasainen</label>
             </div>
-            <p></p>
-            <label>Juoksun tyyppi:</label>
+            <label>Juoksun tyyppi*:</label>
             <div class="radio-group">
                 <label><input type="radio" name="run_type" value="kevyt">Kevyt</label>
                 <label><input type="radio" name="run_type" value="tavoitteellinen">Tavoitteellinen</label>
                 <label><input type="radio" name="run_type" value="kisaan tähtäävä">Kisaan tähtäävä</label>
                 <label><input type="radio" name="run_type" value="kisa">Kisa</label>
             </div>
-            <p></p>
-            <label>Kilpailu:</label>
-            <input type="text" name="race_name" placeholder="">
-            <p></p>
-            <div>
-                <button type="submit">Hae</button>
-            </div>
-        </form>
 
-        <section class="entries">
-            {% if runs %}
-                <ul>
-                    {% for entry in runs %}
-                    <li>
-                        <span><strong>Käyttäjä:</strong> {{ entry['username'] }}</span>
-                        <br>
-                        <strong>{{ entry['distance_km'] }} km {{ entry['distance_m'] }} m</strong>
-                        {{ entry['runtime'] }} -
-                        {{ entry['terrain'] }} -
-                        {{ entry['run_type'] }}
-                        {% if entry['race_name'] %}(Kisa: {{ entry['race_name']}}){% endif %}
-                        <br>
-                        <em>{{ entry['other'] }}</em>
-                        <br>
-                        <small>{{ entry['created_at'] }}</small>
-                        <p></p>
-                        <p></p>
-                    </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>Antamillasi hakuehdoilla ei löytynyt kirjauksia</p>
-            {% endif %}
-        </section>
+            <label>Kilpailun nimi (jos kilpailu):</label>
+            <input type="text" name="race_name" placeholder="">
+
+            <label>Muut tiedot:</label>
+            <input type="text" name="other" placeholder="">
+
+            <button type="submit">Lisää juoksu</button>
+        </form>
 
     </main>
 

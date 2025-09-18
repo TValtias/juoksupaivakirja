@@ -181,7 +181,7 @@ def browse_runs():
     search_conditions = []
     if km:
         search += " AND entries.distance_km = ?"
-        search_conditions.append(km)
+        search_conditions.append(int(km))
     if terrain:
         search += " AND entries.terrain = ?"
         search_conditions.append(terrain)
