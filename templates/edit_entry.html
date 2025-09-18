@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="script.js" defer></script> <!-- Linkki JavaScript-tiedostoon -->
 </head>
 <body>
     <header class="banner">
@@ -15,7 +14,7 @@
                 </li>
                 <li><a href="/">ETUSIVU</a></li>
                 <li><a href="/register">REKISTERÖIDY</a></li>
-                <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
+                <li><a href="/logout">KIRJAUDU ULOS</a></li>
                 <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
                 <li><a href="/browseruns">SELAA</a></li>
                 <li><a href="/kisat">KISAT</a></li>
@@ -23,16 +22,83 @@
         </nav>
     </header>
 
+    <div class="top-banner">
+        <h2>Rekisteröidy käyttäjäksi</h2>
+    </div>
+
     <main>
         <section>
-            <h2>Otsikko</h2>
-            <p>edit.edit.edit</p>
+            <h2>Muokkataan merkintää</h2>
+            <p> * kohdat pakollisia</p>
         </section>
 
-        <section>
-            <h2>Toinen osio</h2>
-            <p>edit.edit.edit</p>
-        </section>
+        {%if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form class="entry-form" method="POST">
+            <label> Juoksun pituus*:</label>
+            <div class="inline-inputs">
+                <input type="number" name="km" value="{{ entry['distance_km']}}" min="0" required>
+                <input type="number" name="m" value="{{ entry['distance_m']}}" min="0" required>
+            </div>
+
+            <label>Aika (hh:mm:ss)*:</label>
+            <input type="text" name="runtime" value="{{ entry['runtime']}}" required>
+            
+            <label>Maasto*:</label>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" name="terrain" value="juoksumatto" 
+                    {% if 'juoksumatto' in entry['terrain'] %} checked {% endif %}>Juoksumatto
+                </label>
+                <label>
+                    <input type="checkbox" name="terrain" value="katu"
+                    {% if 'katu' in entry['terrain'] %} checked {% endif %}>Katu
+                </label>
+                <label>
+                    <input type="checkbox" name="terrain" value="rata"
+                    {% if 'rata' in entry['terrain'] %} checked {% endif %}>Rata
+                </label>
+                <label>
+                    <input type="checkbox" name="terrain" value="hiekkatie"
+                    {% if 'hiekkatie' in entry['terrain'] %} checked {% endif %}>Hiekkatie
+                </label>
+                <label>
+                    <input type="checkbox" name="terrain" value="metsä/epätasainen"
+                    {% if 'metsä/epätasainen' in entry['terrain'] %} checked {% endif %}>Metsä/epätasainen
+                </label>
+            </div>
+            <label>Juoksun tyyppi*:</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="run_type" value="kevyt"
+                    {% if 'kevyt' in entry['run_type'] %} checked {% endif %}>Kevyt
+                </label>
+                <label>
+                    <input type="radio" name="run_type" value="tavoitteellinen"
+                    {% if 'tavoitteellinen' in entry['run_type'] %} checked {% endif %}>Tavoitteellinen
+                </label>
+                <label>
+                    <input type="radio" name="run_type" value="kisaan tähtäävä"
+                    {% if 'kisaan tähtäävä' in entry['run_type'] %} checked {% endif %}>Kisaan tähtäävä
+                </label>
+                <label>
+                    <input type="radio" name="run_type" value="kisa"
+                    {% if 'kisa' in entry['run_type'] %} checked {% endif %}>Kisa
+                </label>
+            </div>
+
+            <label>Kilpailun nimi (jos kilpailu):</label>
+            <input type="text" name="race_name" value="{{ entry['race_name'] or ''}}">
+
+            <label>Muut tiedot:</label>
+            <input type="text" name="other" value="{{ entry['other'] or ''}}">
+
+            <button type="submit">Tallenna muutokset</button>
+        </form>
+        <form method="POST" action= "{{ url_for('delete_entry', entry_id=entry['id']) }}" onsubmit="return confirm('Poistetaanko merkintä? Tätä toimintoa ei voi perua');">
+                <button type="submit">Poista merkintä</button>
+        </form>
     </main>
 
     <footer>

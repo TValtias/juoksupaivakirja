@@ -125,23 +125,24 @@ def edit_entry(entry_id):
         return "Muokattavaa merkintää ei löytynyt", 403
     
     if request.method == "POST":
-        km = request.form["km"]
-        m = request.form["m"]
-        time = request.form["time"]
-        terrain = request.form["terrain"]
-        run_type = request.form["run_type"]
+        km = request.form.get("km")
+        m = request.form.get("m")
+        runtime = request.form.get("runtime")
+        terrains = request.form.getlist("terrain")
+        terrain = ",".join(terrains) if terrains else ""
+        run_type = request.form.get("run_type")
         race_name = request.form.get("race_name")
-        other = request.form["other"]
+        other = request.form.get("other")
 
-        if not km or not m or not time or not terrain or not run_type:
+        if not km or not m or not runtime or not terrain or not run_type:
             return render_template("edit_entry.html", entry=entry, error="Tarkista, että * merkityt kentät on täytetty.")
             
         with get_db_connection() as connecting:
             connecting.execute(
                 """UPDATE entries
-                    SET distance_km = ?, distance_m = ?, time = ?, terrain = ?, run_type = ?, race_name = ?, other = ?
+                    SET distance_km = ?, distance_m = ?, runtime = ?, terrain = ?, run_type = ?, race_name = ?, other = ?
                     WHERE id = ? AND user_id = ?""",
-                    (km, m, time, terrain, run_type, race_name, other, entry_id, session["user_id"])
+                    (km, m, runtime, terrain, run_type, race_name, other, entry_id, session["user_id"])
             )
             connecting.commit()
        
