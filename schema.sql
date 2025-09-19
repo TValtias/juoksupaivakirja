@@ -19,3 +19,27 @@ CREATE TABLE entries (
 );
 
 CREATE INDEX idx_user_id ON entries(user_id);
+
+CREATE TABLE run_types (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+INSERT INTO run_types (name) VALUES
+('kevyt'),
+('tavoitteellinen'),
+('kilpailuun tähtäävä'),
+('kisat');
+
+
+CREATE TABLE terrains (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT UNIQUE NOT NULL
+);
+
+INSERT INTO terrains (name) VALUES
+('juoksumatto'),
+('katu'),
+('rata'),
+('hiekka'),
+('metsä/epätasainen');

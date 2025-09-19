@@ -97,7 +97,15 @@ def add_entry():
         other = request.form.get("other")
 
         if not km or not m or not runtime or not terrain or not run_type:
-            return render_template("add_entry.html", error="Tarkista, että * merkityt kentät on täytetty.")
+            with get_db_connection() as connecting:
+                terrains = connecting.execute("SELECT name FROM terrains").fetchall()
+                run_types = connecting.execute("SELECT name FROM run_types").fetchall()
+            return render_template(
+                "add_entry.html",
+                error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
+                terrains = terrains,
+                run_types= run_types
+            )
 
         with get_db_connection() as connecting:
             connecting.execute(
@@ -108,9 +116,13 @@ def add_entry():
             connecting.commit()
         return redirect("/paivakirja")
     
-    return render_template("add_entry.html")
+    with get_db_connection() as connecting:
+        terrains = connecting.execute("SELECT name FROM terrains").fetchall()
+        run_types = connecting.execute("SELECT name FROM run_types").fetchall()
+    return render_template("add_entry.html", terrains = terrains, run_types = run_types)
         
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
+
 def edit_entry(entry_id):
     if "user_id" not in session:
         return redirect("login")
@@ -120,6 +132,9 @@ def edit_entry(entry_id):
             "SELECT * FROM entries WHERE id = ? AND user_id = ?",
             (entry_id, session["user_id"])
         ).fetchone()
+
+        terrains = connecting.execute("SELECT name FROM terrains").fetchall()
+        run_types = connecting.execute("SELECT name FROM run_types").fetchall()
 
     if entry is None:
         return "Muokattavaa merkintää ei löytynyt", 403
@@ -148,7 +163,7 @@ def edit_entry(entry_id):
        
         return redirect("/paivakirja")
 
-    return render_template("edit_entry.html", entry = entry)
+    return render_template("edit_entry.html", entry = entry, terrains = terrains, run_types = run_types)
 
 @app.route("/delete_entry/<int:entry_id>", methods=["POST"])
 def delete_entry(entry_id):

@@ -47,45 +47,23 @@
             
             <label>Maasto*:</label>
             <div class="checkbox-group">
+                {% for t in terrains %}
                 <label>
-                    <input type="checkbox" name="terrain" value="juoksumatto" 
-                    {% if 'juoksumatto' in entry['terrain'] %} checked {% endif %}>Juoksumatto
+                    <input type="checkbox" name="terrain" value="{{ t['name']}}"
+                    {% if entry and t['name'] in entry['terrain'] %} checked {% endif %}>
+                    {{ t['name'] }}
                 </label>
-                <label>
-                    <input type="checkbox" name="terrain" value="katu"
-                    {% if 'katu' in entry['terrain'] %} checked {% endif %}>Katu
-                </label>
-                <label>
-                    <input type="checkbox" name="terrain" value="rata"
-                    {% if 'rata' in entry['terrain'] %} checked {% endif %}>Rata
-                </label>
-                <label>
-                    <input type="checkbox" name="terrain" value="hiekkatie"
-                    {% if 'hiekkatie' in entry['terrain'] %} checked {% endif %}>Hiekkatie
-                </label>
-                <label>
-                    <input type="checkbox" name="terrain" value="metsä/epätasainen"
-                    {% if 'metsä/epätasainen' in entry['terrain'] %} checked {% endif %}>Metsä/epätasainen
-                </label>
+                {% endfor %}
             </div>
             <label>Juoksun tyyppi*:</label>
             <div class="radio-group">
+                {% for r in run_types %}
                 <label>
-                    <input type="radio" name="run_type" value="kevyt"
-                    {% if 'kevyt' in entry['run_type'] %} checked {% endif %}>Kevyt
+                    <input type="radio" name="run_type" value="{{ r['name']}}"
+                    {% if entry and r['name'] in entry['run_type'] %} checked {% endif %}>
+                    {{ r['name'] }}
                 </label>
-                <label>
-                    <input type="radio" name="run_type" value="tavoitteellinen"
-                    {% if 'tavoitteellinen' in entry['run_type'] %} checked {% endif %}>Tavoitteellinen
-                </label>
-                <label>
-                    <input type="radio" name="run_type" value="kisaan tähtäävä"
-                    {% if 'kisaan tähtäävä' in entry['run_type'] %} checked {% endif %}>Kisaan tähtäävä
-                </label>
-                <label>
-                    <input type="radio" name="run_type" value="kisa"
-                    {% if 'kisa' in entry['run_type'] %} checked {% endif %}>Kisa
-                </label>
+                {% endfor %}
             </div>
 
             <label>Kilpailun nimi (jos kilpailu):</label>

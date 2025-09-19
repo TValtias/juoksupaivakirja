@@ -47,18 +47,23 @@
             
             <label>Maasto*:</label>
             <div class="checkbox-group">
-                <label><input type="checkbox" name="terrain" value="juoksumatto">Juoksumatto</label>
-                <label><input type="checkbox" name="terrain" value="katu">Katu</label>
-                <label><input type="checkbox" name="terrain" value="rata">Rata</label>
-                <label><input type="checkbox" name="terrain" value="hiekkatie">Hiekkatie</label>
-                <label><input type="checkbox" name="terrain" value="metsä/epätasainen">Metsä/epätasainen</label>
+                {% for t in terrains %}
+                <label>
+                    <input type="checkbox" name="terrain" value="{{ t['name']}}"
+                    {% if entry and t['name'] in entry['terrain'] %} checked {% endif %}>
+                    {{ t['name'] }}
+                </label>
+                {% endfor %}
             </div>
             <label>Juoksun tyyppi*:</label>
             <div class="radio-group">
-                <label><input type="radio" name="run_type" value="kevyt">Kevyt</label>
-                <label><input type="radio" name="run_type" value="tavoitteellinen">Tavoitteellinen</label>
-                <label><input type="radio" name="run_type" value="kisaan tähtäävä">Kisaan tähtäävä</label>
-                <label><input type="radio" name="run_type" value="kisa">Kisa</label>
+                {% for r in run_types %}
+                <label>
+                    <input type="radio" name="run_type" value="{{ r['name']}}"
+                    {% if entry and r['name'] in entry['run_type'] %} checked {% endif %}>
+                    {{ r['name'] }}
+                </label>
+                {% endfor %}
             </div>
 
             <label>Kilpailun nimi (jos kilpailu):</label>
