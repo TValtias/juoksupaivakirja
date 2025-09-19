@@ -13,21 +13,21 @@ Varmista, että sinulla on:
 - python 3.10 +
 - pip
 
-  1) Lataa repo:
+  1.) Lataa repo:
      git clone <repo_url>
      cd juoksupaivakirja
 
-  2)Aktivoidaan virtuaaliympäristö:
+  2.)Aktivoidaan virtuaaliympäristö:
     python3 -m venv venv
     souce venv/bin/activate
 
-  3)Aktivoidaan tarvittavat riippuvuudet:
+  3.)Aktivoidaan tarvittavat riippuvuudet:
     pip install -r requirements.txt
 
-  4)Luo tietokanta:
+  4.)Luo tietokanta:
     sqlite3 database.db < schema.sql
 
-  5)Käynnistä:
+  5.)Käynnistä:
     python app.py
 
   HUOM! Päiväkirjan käyttö (merkintöjen luonti, muokkaus, poisto) vaatii rekisteröinnin. Etusivu ja selaa toimivat ilman. Kisat sivua ei ole vielä luotu, joten se kannattaa jättää huomiotta.
