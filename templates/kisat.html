@@ -23,7 +23,7 @@
     </header>
 
     <div class="top-banner">
-        <h2>Tervetuloa juoksupäiväkirjaasi, {{ username }}</h2>
+        <h2>Kisasivut tulossa</h2>
     </div>
 
     <main>
@@ -34,30 +34,7 @@
 
         <a href="{{ url_for('add_entry') }}" class="button-link">Lisää uusi merkintä</a>
 
-        <section class="entries">
-            {% if entries %}
-                <ul>
-                    {% for entry in entries %}
-                    <li>
-                        <strong>{{ entry['distance_km'] }} km {{ entry['distance_m'] }} m</strong>
-                        {{ entry['runtime'] }} -
-                        {{ entry['terrain'] }} -
-                        {{ entry['run_type'] }}
-                        {% if entry['race_name'] %}(Kisa: {{ entry['race_name']}}){% endif %}
-                        <br>
-                        <em>{{ entry['other'] }}</em>
-                        <br>
-                        <small>{{ entry['created_at'] }}</small>
-                        <a href="{{ url_for('edit_entry', entry_id=entry['id']) }}" class="button-link">Muokkaa tai poista merkintä</a>
-                        <p></p>
-                        <p></p>
-                    </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>Aloita lisäämällä ensimmäinen juoksumerkintäsi!</p>
-            {% endif %}
-        </section>
+
 
     </main>
 
