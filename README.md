@@ -1,9 +1,33 @@
 # juoksupaivakirja
 
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
-- Käyttäjä pystyy lisäämään sovellukseen juoksulenkkinsä tiedot päiväkirjana. Lisäksi käyttäjä pystyy muokkaamaan ja poistamaan lisäämiään lenkkien tietoja.
-- Käyttäjä näkee sovellukseen lisätyt päiväkirjamerkinnöt. Käyttäjä näkee sekä itse lisäämänsä että muiden käyttäjien lisäämät juoksulenkit.
-- Käyttäjä pystyy etsimään kisoja, juoksujen pituuksia ja käyttäjiä hakusanalla tai muulla perusteella. Käyttäjä pystyy hakemaan sekä itse lisäämiään että muiden käyttäjien lisäämiä juoksulenkkejä.
-- Sovelluksessa on käyttäjäsivut, jotka näyttävät jokaisesta käyttäjästä tilastoja ja käyttäjän lisäämät päiväkirjamerkinnöt.
-- Käyttäjä pystyy valitsemaan juoksulenkille yhden tai useamman luokittelun (uusi juoksija, kevyt lenkki, tavoitteellinen juoksu, kilpailuun tähtäävä, kisat). Mahdolliset luokat ovat tietokannassa.
-- Käyttäjät voivat seurata toisen käyttäjän toimintaa ja tarkastella ja kommentoida kisa-sivuilla kisoja ja niihin osallistuneiden juoksijoiden suoritusta ja kisasijoitusta.
+- Käyttäjä pystyy lisäämään sovellukseen juoksulenkkinsä tiedot päiväkirja-muodossa kirjauduttuaan sisään sivulla päiväkirja.
+- Käyttäjä pystyy muokkaamaan ja poistamaan lisäämiään lenkkien tietoja päiväkirja-sivulla.
+- Käyttäjä näkee sovellukseen lisätyt päiväkirjamerkinnöt Selaa -sivulla. Käyttäjä näkee sekä itse lisäämänsä että muiden käyttäjien lisäämät juoksulenkit ja pystyy hakemaan juoksulenkkejä eri filttereillä.
+- Käyttäjä pystyy valitsemaan juoksulenkille yhden tai useamman luokittelun (kevyt lenkki, tavoitteellinen juoksu, kilpailuun tähtäävä, kisat) sekä eri maastot. Mahdolliset luokat ovat tietokannassa.
+
+
+OHJEET SOVELLUKSEN KOKEILUUN (MAC, Windows käyttäjillä saattaa olla hieman eri komennot):
+
+Varmista, että sinulla on:
+- python 3.10 +
+- pip
+
+  1) Lataa repo:
+     git clone <repo_url>
+     cd juoksupaivakirja
+
+  2)Aktivoidaan virtuaaliympäristö:
+    python3 -m venv venv
+    souce venv/bin/activate
+
+  3)Aktivoidaan tarvittavat riippuvuudet:
+    pip install -r requirements.txt
+
+  4)Luo tietokanta:
+    sqlite3 database.db < schema.sql
+
+  5)Käynnistä:
+    python app.py
+
+  HUOM! Päiväkirjan käyttö (merkintöjen luonti, muokkaus, poisto) vaatii rekisteröinnin. Etusivu ja selaa toimivat ilman. Kisat sivua ei ole vielä luotu, joten se kannattaa jättää huomiotta.
