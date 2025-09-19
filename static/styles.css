@@ -1,0 +1,229 @@
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;  
+    gap: 0px;             
+    padding: 40px 40px;
+}
+
+body {
+    min-height: 100vh;
+    background-color:hsl(180, 11%, 98%);
+    font-family:Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(35, 35, 39);
+    margin: 0px;
+}
+
+.kuva-linkki {
+    max-width: 90%;
+    height: auto;
+    display: block;
+    margin: 100px auto;
+}
+
+.top-banner {
+    font-size: xx-large;
+    color:rgb(35, 35, 39);
+    width: 100%;
+    background-color:hsl(180, 11%, 98%);
+    text-align: center;
+}
+
+.banner {
+    background-color:rgb(35, 35, 39);
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.alt-banner {
+    max-width: 100%;
+    height: auto;
+    display: flex;
+}
+
+.nav-links ul {
+    display:flex;
+    align-items: center;
+    justify-content:flex-start;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+
+}
+.nav-links li {
+    margin: 10px;
+}
+
+.nav-links a{
+    color: hsl(180, 11%, 98%);
+    text-decoration: none;
+    font-size: small;
+    font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+
+.banner-logo {
+    max-width: 40px;
+    height: auto;
+    object-fit: contain;
+}
+
+.right-text-section {
+    display: flex;
+    align-items:center;
+    justify-content: flex-start;
+    margin: 40px 40px;
+}
+
+.pic-left {
+    max-width: 500px;
+    height: auto;
+    margin-right: 350px
+}
+
+.text-right {
+    flex: 1;
+}
+
+.left-text-section {
+    display: flex;
+    align-items:center;
+    justify-content: flex-end;
+    margin: 40px 40px;
+}
+
+.pic-right {
+    max-width: 500px;
+    height: auto;
+    margin-left: 350px;
+}
+
+.text-left {
+    flex: 1;
+}
+
+.register-form {
+    width: 350px;                
+    margin: 10px auto;
+    padding: 40px;
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.register-form h2 {
+    text-align: center;
+    color: #232327;
+    margin-bottom: 20px;
+}
+
+.register-form label {
+    font-weight: bold;
+    color: #232327;
+    margin-bottom: 5px;
+}
+
+.register-form input[type="text"],
+.register-form input[type="password"] {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.register-form input[type="text"]:focus,
+.register-form input[type="password"]:focus {
+    border-color: #1a1a4d;
+    outline: none;
+    box-shadow: 0 0 5px rgba(66, 66, 146, 0.3);
+}
+
+.register-form button {
+    padding: 10px;
+    background-color: #8d8d9e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.register-form button:hover {
+    background-color: #299dea;
+}
+
+.error {
+    color: rgb(130, 12, 12)
+}
+
+.entry-form {
+    width: 550px;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #828294;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+.entry-form h2 {
+    text-align: center;
+    color: #232327;
+    margin-bottom: 20px;
+}
+
+.entry-form label {
+    font-weight: bold;
+    color: #232327;
+    margin-bottom: 5px;
+}
+
+.entry-form input[type="text"],
+.entry-form input[type="time"] {
+    width: 100%;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.entry-form input[type="text"]:focus,
+.entry-form input[type="time"]:focus {
+    border-color: #1a1a4d;
+    outline: none;
+    box-shadow: 0 0 5px rgba(66, 66, 146, 0.3);
+}
+
+.entry-form button {
+    padding: 10px;
+    background-color: #74748b;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.entry-form button:hover {
+    background-color: #0b476f7b;
+}
