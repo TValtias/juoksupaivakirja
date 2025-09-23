@@ -217,7 +217,9 @@ def browse_runs():
 
 @app.route("/kisat")
 def competitions():
-    return render_template("kisat.html")
+    with get_db_connection() as connecting:
+        dif_competitions = connecting.execute("SELECT * FROM competitions").fetchall()
+    return render_template("kisat.html", competitions=dif_competitions)
 
 @app.route("/kayttaja/<int:page_id>")
 def user_page(page_id):

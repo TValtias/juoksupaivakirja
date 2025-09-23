@@ -31,8 +31,21 @@
         {%if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
+        <div>
+            <p>Etkö löydä etsimääsi sivua?</p>
+            <p>Lisäämme jatkuvasti uusia kisasivuja,<br>mutta valitettavasti emme ehdi tehdä kaikille sivua.</p>
+            <p>Voit silti rekisteröidä kisatuloksesi päiväkirjaasi, vaikka sille ei olisi vielä virallista kisasivua!</p>
+        </div>
 
-        <a href="{{ url_for('add_entry') }}" class="button-link">Lisää uusi merkintä</a>
+        <h2>Valitse kisat alla olevalta listalta</h2>
+        <ul>
+            {% for c in competitions %}
+                <li><a href="{{ url_for('competition_detail', comp_id=c['id']) }}">{{ c['name'] }}</a></li>
+            {% else %}
+                <li>Kisoja tulossa!</li>
+            {% end for %}
+        </ul>
+        
 
 
 
