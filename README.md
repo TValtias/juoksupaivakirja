@@ -28,6 +28,6 @@ Varmista, että sinulla on:
     sqlite3 database.db < schema.sql
 
   5.)Käynnistä:
-    python app.py
+    python3 app.py
 
   HUOM! Päiväkirjan käyttö (merkintöjen luonti, muokkaus, poisto) vaatii rekisteröinnin. Etusivu ja selaa toimivat ilman. Kisat sivua ei ole vielä luotu, joten se kannattaa jättää huomiotta.
