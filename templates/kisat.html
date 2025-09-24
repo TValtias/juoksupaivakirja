@@ -37,13 +37,13 @@
             <p>Voit silti rekisteröidä kisatuloksesi päiväkirjaasi, vaikka sille ei olisi vielä virallista kisasivua!</p>
         </div>
 
-        <h2>Valitse kisat alla olevalta listalta</h2>
+        <h2>Valitse kisat alla olevasta listalta</h2>
         <ul>
             {% for c in competitions %}
-                <li><a href="{{ url_for('competition_detail', comp_id=c['id']) }}">{{ c['name'] }}</a></li>
+                <li><a href="{{ url_for('competition', competition_id=c['id']) }}">{{ c['name'] }}</a></li>
             {% else %}
                 <li>Kisoja tulossa!</li>
-            {% end for %}
+            {% endfor %}
         </ul>
         
 

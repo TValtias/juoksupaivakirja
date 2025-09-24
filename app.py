@@ -221,6 +221,16 @@ def competitions():
         dif_competitions = connecting.execute("SELECT * FROM competitions").fetchall()
     return render_template("kisat.html", competitions=dif_competitions)
 
+@app.route("/kisa_sivu/<int:competition_id>")
+def competition(competition_id):
+    with get_db_connection() as connecting:
+        competition = connecting.execute(
+            "SELECT * FROM competitions WHERE id = ?", (competition_id,)
+        ).fetchone()
+    if competition is None:
+        return "Kilpailua ei löytynyt", 404
+    return render_template("kisa_sivu.html", competition=competition)
+
 @app.route("/kayttaja/<int:page_id>")
 def user_page(page_id):
     return "Käyttäjien sivut tulossa pian!"

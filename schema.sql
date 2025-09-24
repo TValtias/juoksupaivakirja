@@ -24,6 +24,7 @@ CREATE TABLE competitions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
     description TEXT,
+    description2 TEXT,
     banner_image TEXT,
     map_image TEXT
 );
