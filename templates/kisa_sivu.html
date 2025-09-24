@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="banner">
+        <nav class="nav-links">
+            <ul>
+                <li>
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lenkkipolku logo" class="banner-logo">
+                </li>
+                <li><a href="/">ETUSIVU</a></li>
+                <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
+                <li><a href="/logout">KIRJAUDU ULOS</a></li>
+                <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
+                <li><a href="/browseruns">SELAA</a></li>
+                <li><a href="/kisat">KISAT</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="top-banner">
+        {%if competition['banner_image'] %}
+        <section>
+            <img src="{{ url_for('static', filename='images/' + competition['banner_image']) }}" alt="Kisan banneri" class="alt-banner">
+        </section>
+        {% endif %}
+    </div>
+
+    <main>
+
+
+        {%if competition['map_image'] %}
+        <section class="top-banner">
+            <img src="{{ url_for('static', filename='images/' + competition['map_image']) }}" alt="Kisan kartta" class="alt-banner">
+        </section>
+        {% endif %}
+
+        <section>
+            <p class="description">{{ competition['description'] }}</p>
+        </section>
+
+        <section>
+            <p class="description">{{ competition['description2'] }}</p>
+        </section>
+
+
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Juoksupäiväkirja. Kaikki oikeudet pidätetään.</p>
+    </footer>
+</body>
+</html>
