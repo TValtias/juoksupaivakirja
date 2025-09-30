@@ -45,9 +45,6 @@
                         <em>{{ entry['other'] }}</em>
                         <br>
                         <small>{{ entry['created_at'] }}</small>
-                        <a href="{{ url_for('edit_entry', entry_id=entry['id']) }}" class="button-link">Muokkaa tai poista merkintä</a>
-                        <p></p>
-                        <p></p>
                     </li>
                     {% endfor %}
                 </ul>
@@ -57,7 +54,7 @@
         </section>
         <aside class="stats-box">
             <h3>Käyttäjän tilastot</h3>
-            <p>Pisin juoksusi:
+            <p>Pisin juoksu:
                 {% if record_run %}
                     {{ record_run // 1000 }} km {{ record_run % 1000 }} m
                 {% else %}

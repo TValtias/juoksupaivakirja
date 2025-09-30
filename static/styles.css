@@ -36,6 +36,11 @@ body {
     margin: 100px auto;
 }
 
+a {
+    color:#075e9c;
+    text-decoration: none;
+}
+
 .top-banner {
     font-size: xx-large;
     color:rgb(35, 35, 39);
@@ -257,10 +262,23 @@ body {
 
 .entries {
     flex: 2;
-    background:hsl(224, 79%, 89%);
+    background:hsl(208, 80%, 90%);
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    list-style-type: none;
+}
+
+.entries ul{
+    list-style-type: none;
+    padding: 10px;
+    margin: 0px;
+    text-align: left;
+}
+
+.entries li{
+    margin-bottom: 30px;
+    border-radius: 6px;
 }
 
 .stats-box {
@@ -282,6 +300,32 @@ body {
 .stats-box p {
     margin: 10px 0;
     font-weight: bold;
+}
+
+.search-group {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+
+.rows {
+    display: flex;
+    flex-direction: column;
+}
+
+.rows label {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .competition-content {
@@ -349,7 +393,7 @@ body {
 }
 
 .comment {
-    background-color:aliceblue;
+    background-color:hsl(205, 42%, 75%);
     border: 1px solid #dddddd;
     border-radius: 6px;
     padding: 10px;
@@ -361,7 +405,7 @@ body {
 }
 
 .card {
-    background: aliceblue;
+    background: hsl(180, 11%, 98%);
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -392,7 +436,7 @@ body {
 }
 .competition-content .stats-box {
     flex: 1;
-    background:#96bad2;
+    background:hsl(205, 42%, 75%);
     color:#174d71;
 }
 .competition-content h2 {

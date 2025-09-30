@@ -4,9 +4,11 @@ from flask import redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
 import secrets
+import os
+
 
 app = Flask(__name__)
-app.secret_key = "2HW?ei123#4_HE034nw!-jU4Mn2&!?f"
+app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(20))
 
 @app.route("/")
 def index():
@@ -275,6 +277,7 @@ def competition(competition_id):
             JOIN users ON competition_comments.user_id = users.id
             WHERE competition_comments.competition_id = ?
             ORDER BY competition_comments.created_at DESC
+            LIMIT 15
         """, (competition_id,)).fetchall()
     return render_template("kisa_sivu.html", competition=competition, top_result=top_result, comments=comments)
 

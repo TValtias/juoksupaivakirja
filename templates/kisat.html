@@ -31,14 +31,9 @@
         {%if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
-        <div>
-            <p>Etkö löydä etsimääsi sivua?</p>
-            <p>Lisäämme jatkuvasti uusia kisasivuja,<br>mutta valitettavasti emme ehdi tehdä kaikille sivua.</p>
-            <p>Voit silti rekisteröidä kisatuloksesi päiväkirjaasi, vaikka sille ei olisi vielä virallista kisasivua!</p>
-        </div>
 
         <h2>Valitse kisat alla olevasta listalta</h2>
-        <ul>
+        <ul class="entries">
             {% for c in competitions %}
                 <li><a href="{{ url_for('competition', competition_id=c['id']) }}">{{ c['name'] }}</a></li>
             {% else %}
@@ -46,6 +41,16 @@
             {% endfor %}
         </ul>
         
+
+        <section class="left-text-section">
+            <div class="text-left">
+                <h2>Etkö löydä etsimääsi kilpailua?</h2>
+                <p>Lisäämme jatkuvasti uusia kisasivuja,<br>mutta valitettavasti emme ehdi tehdä kaikille sivua.</p>
+                <p>Voit silti rekisteröidä kisatuloksesi päiväkirjaasi, vaikka sille ei olisi vielä virallista kisasivua!</p>
+            </div>
+            <img src="{{ url_for('static', filename='images/competition.jpg') }}" alt="Nainen kyykyssä aidalla" class="pic-right">
+        </section>
+
 
 
 

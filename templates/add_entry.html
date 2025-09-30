@@ -38,8 +38,8 @@
         <form class="entry-form" method="POST" action="{{ url_for('add_entry') }}">
             <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
-                <input type="number" name="km" placeholder="km" min="0" required>
-                <input type="number" name="m" placeholder="m" min="0" required>
+                <input type="number" name="km" placeholder="km" min="0" max="999" required>
+                <input type="number" name="m" placeholder="m" min="0" max="" required>
             </div>
 
             <label>Aika (hh:mm:ss)*:</label>
