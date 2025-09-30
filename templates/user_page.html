@@ -13,7 +13,6 @@
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lenkkipolku logo" class="banner-logo">
                 </li>
                 <li><a href="/">ETUSIVU</a></li>
-                <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
                 <li><a href="/logout">KIRJAUDU ULOS</a></li>
                 <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
                 <li><a href="/browseruns">SELAA</a></li>
@@ -23,7 +22,7 @@
     </header>
 
     <div class="top-banner">
-        <h2>Tervetuloa juoksupäiväkirjaasi, {{ username }}</h2>
+        <h2>Käyttäjän {{ profile_user['user'] }} juoksupäiväkirja</h2>
     </div>
 
     <main class="paivakirja-main">
@@ -31,8 +30,6 @@
         {%if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
-
-        <a href="{{ url_for('add_entry') }}" class="button-link">Lisää uusi merkintä</a>
 
         <section class="entries">
             {% if entries %}
@@ -55,20 +52,28 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>Aloita lisäämällä ensimmäinen juoksumerkintäsi!</p>
+                <p>Tällä käyttäjällä ei ole juoksumerkintöjä</p>
             {% endif %}
         </section>
         <aside class="stats-box">
-            <h3>Ennätyksesi</h3>
+            <h3>Käyttäjän tilastot</h3>
             <p>Pisin juoksusi:
                 {% if record_run %}
                     {{ record_run // 1000 }} km {{ record_run % 1000 }} m
                 {% else %}
-                    Saat tuloksia lisäämällä päiväkirjamerkintöjä!
+                    Ei vielä juoksumerkintöjä
                 {% endif %}
             </p>
-            <p>Olet osallistunut: {{ competition_count }} kilpailuun.</p>
-            <p>Olet saanut {{ support_count }} kannustusta!</p>
+            <p>Osallistunut: {{ competition_count }} kilpailuun.</p>
+            <p>Kannustuksia: {{support_count}}</p>
+
+            {% if session.get("user_id") and not already_supported %}
+            <form method="post">
+                <button type="submit" class="button-link">Kannusta juoksijaa!</button>
+            </form>
+            {% elif already_supported %}
+            <p>Olet jo kannustanut tätä juoksijaa!</p>
+            {%endif%}
         </aside>
     </main>
 

@@ -8,6 +8,7 @@ main {
     padding: 40px 40px;
 }
 
+
 body {
     min-height: 100vh;
     background-color:hsl(180, 11%, 98%);
@@ -17,6 +18,15 @@ body {
     align-items: center;
     color: rgb(35, 35, 39);
     margin: 0px;
+}
+
+.paivakirja-main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: center;
+    gap: 40px;
+    padding: 40px 40px;
 }
 
 .kuva-linkki {
@@ -164,7 +174,7 @@ body {
 }
 
 .register-form button:hover {
-    background-color: #299dea;
+    background-color: #276691;
 }
 
 .error {
@@ -233,4 +243,164 @@ body {
     max-width: 900px;
     margin: 1rem auto;
     font-size: x-large;
+}
+
+.diary-base {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.entries {
+    flex: 2;
+    background:hsl(224, 79%, 89%);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.stats-box {
+    flex: 1;
+    background: hsl(225, 14%, 46%);
+    color:#c8cff7;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.stats-box h3 {
+    margin-top: 0;
+    color:aliceblue;
+    font-size: larger;
+}
+
+.stats-box p {
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.competition-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.descriptions {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.descriptions .description {
+    margin-bottom: 10px;
+    font-size: large;
+    line-height: 1.6;
+}
+
+.comments {
+    background-color:hsl(224, 79%, 89%);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin: 20px auto;
+    max-width: 800px;
+    width: 100%;
+}
+
+.comment-form {
+    margin-bottom: 20px;
+}
+
+.comment-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #8690cc;
+    border-radius: 6px;
+    font-size: 16px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.comment-submit {
+    background-color:#74748b;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.comment-submit:hover {
+    background-color:#0b476f7b; 
+}
+
+.comment-list {
+    margin-top: 20px;
+}
+
+.comment {
+    background-color:aliceblue;
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.comment p {
+    margin: 5px 0;
+}
+
+.card {
+    background: aliceblue;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.competition-banner img,
+.competition-map img {
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.competition-map {
+    text-align: center;
+    margin: 30px auto;
+}
+
+.competition-content {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    flex-wrap: wrap;
+}
+.competition-content .descriptions {
+    flex: 2;
+}
+.competition-content .stats-box {
+    flex: 1;
+    background:#96bad2;
+    color:#174d71;
+}
+.competition-content h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.comments h2 {
+    margin-top: 0;
+    color: #232327;
 }

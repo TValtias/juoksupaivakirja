@@ -18,6 +18,16 @@ CREATE TABLE entries (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE supports (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    supporter_id INTEGER NOT NULL,
+    supported_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (supporter_id) REFERENCES users(id),
+    FOREIGN KEY (supported_id) REFERENCES users(id),
+    UNIQUE (supporter_id, supported_id)
+);
+
 CREATE INDEX idx_user_id ON entries(user_id);
 
 CREATE TABLE competitions (

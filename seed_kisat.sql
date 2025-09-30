@@ -3,7 +3,7 @@ VALUES
 (
     'Lenkkipolun 10km',
     'Lenkkipolun rakastettu 10km juoksu on taas täällä.
-    Huijaa tiesi huipulletai kukista muut kunniakkaasti!
+    Huijaa tiesi huipulle tai kukista muut kunniakkaasti!
     Nyt saa huijata!',
     'Aika: 10.10.2025
     Paikka: Hyvinaito puisto 1 A, Hämeenlinna',

@@ -71,7 +71,11 @@
                 <ul>
                     {% for entry in runs %}
                     <li>
-                        <span><strong>Käyttäjä:</strong> {{ entry['username'] }}</span>
+                        <span><strong>Käyttäjä:</strong> 
+                            <a href="{{url_for('user_page', username=entry['username'])}}">
+                                {{ entry['username'] }}
+                            </a>
+                        </span>
                         <br>
                         <strong>{{ entry['distance_km'] }} km {{ entry['distance_m'] }} m</strong>
                         {{ entry['runtime'] }} -

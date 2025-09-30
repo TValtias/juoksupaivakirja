@@ -79,7 +79,22 @@ def diary():
             (session["user_id"],)
         ).fetchall()
 
-    return render_template("paivakirja.html", entries=entries, username=session["username"])
+        record_run = connecting.execute(
+            "SELECT MAX(distance_km * 1000 + distance_m) AS max_distance FROM entries WHERE user_id = ?",
+            (session['user_id'],)
+        ).fetchone()['max_distance']
+
+        competition_count = connecting.execute(
+            "SELECT COUNT(*) AS cnt FROM entries WHERE user_id = ? AND race_name IS NOT NULL AND race_name !=''",
+            (session["user_id"],)
+        ).fetchone()["cnt"]
+
+        support_count = connecting.execute(
+            "SELECT COUNT(*) AS cnt FROM supports WHERE supported_id = ?",
+            (session["user_id"],)
+        ).fetchone()["cnt"]
+
+    return render_template("paivakirja.html", entries=entries, username=session["username"], record_run=record_run, competition_count=competition_count, support_count=support_count)
 
 @app.route("/uusijuoksu", methods=["GET", "POST"])
 def add_entry():
@@ -221,20 +236,102 @@ def competitions():
         dif_competitions = connecting.execute("SELECT * FROM competitions").fetchall()
     return render_template("kisat.html", competitions=dif_competitions)
 
-@app.route("/kisa_sivu/<int:competition_id>")
+@app.route("/kisa_sivu/<int:competition_id>", methods=["GET","POST"])
 def competition(competition_id):
+    if request.method == "POST":
+        if "user_id" not in session:
+            return redirect("login")
+        comment = request.form.get("comment")
+        if comment:
+            with get_db_connection() as connecting:
+                connecting.execute(
+                    "INSERT INTO competition_comments (competition_id, user_id, comment) VALUES (?, ?, ?)",
+                    (competition_id, session["user_id"], comment)
+                )
+                connecting.commit()
+        return redirect(url_for("competition", competition_id=competition_id,))
+
+
     with get_db_connection() as connecting:
         competition = connecting.execute(
             "SELECT * FROM competitions WHERE id = ?", (competition_id,)
         ).fetchone()
-    if competition is None:
-        return "Kilpailua ei löytynyt", 404
-    return render_template("kisa_sivu.html", competition=competition)
 
-@app.route("/kayttaja/<int:page_id>")
-def user_page(page_id):
-    return "Käyttäjien sivut tulossa pian!"
+        if competition is None:
+            return "Kilpailua ei löytynyt", 404
+        
+        top_result = connecting.execute("""
+            SELECT users.username, runtime
+            FROM entries
+            JOIN users ON entries.user_id = users.id
+            WHERE race_name = ?
+            ORDER BY runtime ASC
+            LIMIT 10                            
+        """, (competition['name'],)).fetchall()
 
+        comments = connecting.execute("""
+            SELECT competition_comments.comment, competition_comments.created_at, users.username
+            FROM competition_comments
+            JOIN users ON competition_comments.user_id = users.id
+            WHERE competition_comments.competition_id = ?
+            ORDER BY competition_comments.created_at DESC
+        """, (competition_id,)).fetchall()
+    return render_template("kisa_sivu.html", competition=competition, top_result=top_result, comments=comments)
+
+
+@app.route("/kayttaja/<username>", methods=["GET", "POST"])
+def user_page(username):
+    with get_db_connection() as connecting:
+        user = connecting.execute(
+            "SELECT * FROM users WHERE username = ?", (username,)
+        ).fetchone()
+        if not user:
+            return "Käyttäjää ei löytynyt", 404
+        
+        entries = connecting.execute(
+            "SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC",
+            (user["id"],)
+        ).fetchall()
+
+        record_run = connecting.execute(
+            "SELECT MAX(distance_km * 1000 + distance_m) AS max_distance FROM entries WHERE user_id = ?",
+            (user["id"],)
+        ).fetchone()['max_distance']
+
+        competition_count = connecting.execute(
+            "SELECT COUNT(*) AS cnt FROM entries WHERE user_id = ? AND race_name IS NOT NULL AND race_name !=''",
+            (user["id"],)
+        ).fetchone()["cnt"]
+
+        support_count = connecting.execute(
+            "SELECT COUNT(*) AS cnt FROM supports WHERE supported_id = ?",
+            (user["id"],)
+        ).fetchone()["cnt"]
+
+        already_supported = False
+        if "user_id" in session:
+            row = connecting.execute(
+                "SELECT 1 FROM supports WHERE supporter_id = ? AND supported_id = ?",
+                (session["user_id"], user["id"])
+            ).fetchone()
+            already_supported = row is not None
+
+    if request.method == "POST":
+        if "user_id" not in session:
+            return redirect("/login")
+        with get_db_connection() as connecting:
+            try:
+                connecting.execute(
+                    "INSERT INTO supports (supporter_id, supported_id) VALUES (?, ?)",
+                    (session["user_id"], user["id"])
+                )
+                connecting.commit()
+            except sqlite3.IntegrityError:
+                pass
+        return redirect(url_for("user_page", username=username))
+    
+    return render_template("user_page.html", profile_user=user, entries=entries, record_run=record_run, competition_count=competition_count, support_count=support_count, already_supported=already_supported)
+        
 
 if __name__ == "__main__":
     app.run(debug=True)
