@@ -111,7 +111,7 @@ def get_competitions():
 def get_competition(competition_id):
     with get_db_connection() as connecting:
         return connecting.execute(
-            "SELECT * FROM competitions WHERE id = ?", (competition_id)
+            "SELECT * FROM competitions WHERE id = ?", (competition_id, )
         ).fetchone()
     
 def get_top_results(competition_name):

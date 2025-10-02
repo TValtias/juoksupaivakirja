@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
 import secrets
 import os
-from queries import add_support, get_top_results, get_competition, add_comments_competition, get_username, create_user, add_entry, get_entries, get_entry, get_max_distance, get_competition_count, get_support_count, search_runs, update_entry, delete_entry, get_competitions, get_comments_competition, get_terrains, get_run_types
+from queries import already_supported, add_support, get_top_results, get_competition, add_comments_competition, get_username, create_user, add_entry, get_entries, get_entry, get_max_distance, get_competition_count, get_support_count, search_runs, update_entry, delete_entry, get_competitions, get_comments_competition, get_terrains, get_run_types
 
 
 app = Flask(__name__)
@@ -120,7 +120,7 @@ def edit_entry(entry_id):
         return redirect("login")
     
     entry = get_entry(entry_id, session["user_id"])
-    terrains = get_entries()
+    terrains = get_terrains()
     run_types = get_run_types()
 
     if entry is None:
@@ -150,7 +150,7 @@ def delete_entry(entry_id):
     if "user_id" not in session:
         return redirect("/login")
     
-    delete_entry(entry_id)
+    delete_entry(entry_id, session["user_id"])
 
     return redirect("/paivakirja")
     
@@ -203,9 +203,9 @@ def user_page(username):
     competition_count = get_competition_count(user["id"])
     support_count = get_support_count(user["id"])
 
-    already_supported = False
+    is_already_supported = False
     if "user_id" in session:
-        already_supported = already_supported(session["user_id"], user["id"])
+        is_already_supported = already_supported(session["user_id"], user["id"])
 
     if request.method == "POST":
         if "user_id" not in session:
@@ -216,7 +216,7 @@ def user_page(username):
             pass
         return redirect(url_for("user_page", username=username))
 
-    return render_template("user_page.html", profile_user=user, entries=entries, record_run=record_run, competition_count=competition_count, support_count=support_count, already_supported=already_supported)
+    return render_template("user_page.html", profile_user=user, entries=entries, record_run=record_run, competition_count=competition_count, support_count=support_count, is_already_supported=is_already_supported)
         
 
 if __name__ == "__main__":
