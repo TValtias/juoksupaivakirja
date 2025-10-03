@@ -10,28 +10,44 @@ def create_user(username, password_hash):
         connecting.commit()
 
 def add_entry(user_id, km, m, runtime, terrain, run_type, race_name, other):
+    race_name = race_name.strip() if race_name and race_name.strip() != "" else None
     with get_db_connection() as connecting:
         connecting.execute(
-            """INSERT INTO entries (user_id, distance_km, distance_m, runtime, terrain, run_type, race_name, other) VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            """INSERT INTO entries (user_id, distance_km, distance_m, runtime, terrain, run_type, race_name, other) VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
             (user_id, km, m, runtime, terrain, run_type, race_name, other)
         )
         connecting.commit()
 
 def get_entries(user_id):
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC", (user_id,)).fetchall()
+        return connecting.execute("SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC", (user_id,)
+        ).fetchall()
     
 def get_max_distance(user_id):
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT MAX(distance_km *1000 + distance_m) AS max_distance FROM entries WHERE user_id = ?", (user_id,)).fetchone()
+        row= connecting.execute (
+            "SELECT MAX(distance_km * 1000 + distance_m) FROM entries WHERE user_id = ?", (user_id,)
+        ).fetchone()
+        if row and row[0] is not None:
+            return int(row[0])
+        return 0
     
 def get_competition_count(user_id):
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT COUNT(*) AS cnt FROM entries WHERE user_id = ? AND race_name IS NOT NULL AND race_name != ''", (user_id,)).fetchone()
+        row = connecting.execute(
+            "SELECT COUNT(*) FROM entries WHERE user_id = ? AND race_name IS NOT NULL AND TRIM(race_name) != ''",
+            (user_id,)
+        ).fetchone()
+        return int(row[0]) if row else 0
     
 def get_support_count(user_id):
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT COUNT(*) AS cnt FROM supports WHERE supported_id = ?", (user_id,)).fetchone()
+        row = connecting.execute(
+            "SELECT COUNT(*) FROM supports WHERE supported_id = ?",
+            (user_id,)
+        ).fetchone()
+        return int(row[0]) if row else 0
+        
     
 def already_supported(supporter_id, supported_id):
     with get_db_connection() as connecting:
@@ -119,7 +135,8 @@ def get_top_results(competition_name):
         return connecting.execute(
             """SELECT users.username, runtime FROM entries JOIN users ON entries.user_id = users.id WHERE race_name = ? ORDER BY runtime ASC
             LIMIT 10
-        """, (competition_name,)).fetchall()
+        """, (competition_name,)
+        ).fetchall()
 
 def add_comments_competition(competition_id, user_id, comment):
     with get_db_connection() as connecting:

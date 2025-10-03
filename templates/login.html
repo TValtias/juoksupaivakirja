@@ -36,7 +36,7 @@
             <p class="error">{{ error }}</p>
         {% endif %}
         <form class="register-form" method="POST" action="/login">
-
+            <input type="hidden" name="csrf_token" value= "{{ csrf_token() }}">
             <label for="username">Käyttäjänimi:</label>
             <input type="text" id="username" name="username" placeholder="Anna käyttäjänimesi" required>
 

@@ -30,7 +30,7 @@
             <p class="error">{{ error }}</p>
         {% endif %}
 
-        <a href="{{ url_for('add_entry') }}" class="button-link">Lisää uusi merkintä</a>
+        <a href="{{ url_for('add_entry_route') }}" class="button-link">Lisää uusi merkintä</a>
 
         <section class="entries">
             {% if entries %}
@@ -59,7 +59,7 @@
         <aside class="stats-box">
             <h3>Ennätyksesi</h3>
             <p>Pisin juoksusi:
-                {% if record_run %}
+                {% if record_run and record_run > 0 %}
                     {{ record_run // 1000 }} km {{ record_run % 1000 }} m
                 {% else %}
                     Saat tuloksia lisäämällä päiväkirjamerkintöjä!

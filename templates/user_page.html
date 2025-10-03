@@ -64,11 +64,12 @@
             <p>Osallistunut: {{ competition_count }} kilpailuun.</p>
             <p>Kannustuksia: {{support_count}}</p>
 
-            {% if session.get("user_id") and not already_supported %}
+            {% if session.get("user_id") and not is_already_supported %}
             <form method="post">
+                <input type="hidden" name="csrf_token" value= "{{ csrf_token() }}">
                 <button type="submit" class="button-link">Kannusta juoksijaa!</button>
             </form>
-            {% elif already_supported %}
+            {% elif is_already_supported %}
             <p>Olet jo kannustanut tätä juoksijaa!</p>
             {%endif%}
         </aside>

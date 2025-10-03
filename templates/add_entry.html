@@ -35,7 +35,8 @@
         {%if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
-        <form class="entry-form" method="POST" action="{{ url_for('add_entry') }}">
+        <form class="entry-form" method="POST" action="{{ url_for('add_entry_route') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
                 <input type="number" name="km" placeholder="km" min="0" max="999" required>

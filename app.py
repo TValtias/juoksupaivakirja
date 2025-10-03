@@ -1,5 +1,6 @@
 import sqlite3
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from flask import redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
@@ -10,6 +11,7 @@ from queries import already_supported, add_support, get_top_results, get_competi
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(20))
+csrf = CSRFProtect(app)
 
 @app.route("/")
 def index():
@@ -71,9 +73,9 @@ def diary():
     if "user_id" not in session:
         return redirect("/login")
     
-    user_id = session["user_id"]
-    
+    user_id = session["user_id"]    
     entries = get_entries(user_id)
+
     record_run = get_max_distance(user_id)
     competition_count = get_competition_count(user_id)
     support_count = get_support_count(user_id)
@@ -81,24 +83,24 @@ def diary():
     return render_template("paivakirja.html", entries=entries, username=session["username"], record_run=record_run, competition_count=competition_count, support_count=support_count)
 
 @app.route("/uusijuoksu", methods=["GET", "POST"])
-def add_entry():
+def add_entry_route():
 
     if "user_id" not in session:
         return redirect("/login")
+    terrains = get_terrains()
+    run_types = get_run_types()
     
     if request.method == "POST":
         km = request.form.get("km")
         m = request.form.get("m")
         runtime = request.form.get("runtime")
-        terrain = request.form.get("terrain")
+        terrains_selected = request.form.getlist("terrain")
+        terrain = ",".join(terrains_selected) if terrains_selected else ""
         run_type = request.form.get("run_type")
         race_name = request.form.get("race_name")
         other = request.form.get("other")
 
-        if not km or not m or not runtime or not terrain or not run_type:
-            terrains = get_terrains()
-            run_types = get_run_types()
-
+        if km == "" or m == "" or not runtime or not terrain or not run_type:
             return render_template(
                 "add_entry.html",
                 error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
@@ -106,11 +108,12 @@ def add_entry():
                 run_types= run_types
             )
 
+        km = int(km)
+        m = int(m)
+
         add_entry(session['user_id'], km, m, runtime, terrain, run_type, race_name, other)
         return redirect("/paivakirja")
     
-    terrains = get_terrains()
-    run_types = get_run_types()
     return render_template("add_entry.html", terrains = terrains, run_types = run_types)
         
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
@@ -127,11 +130,11 @@ def edit_entry(entry_id):
         return "Muokattavaa merkintää ei löytynyt", 403
     
     if request.method == "POST":
-        km = request.form.get("km")
-        m = request.form.get("m")
+        km = int(request.form.get("km"))
+        m = int(request.form.get("m"))
         runtime = request.form.get("runtime")
-        terrains = request.form.getlist("terrain")
-        terrain = ",".join(terrains) if terrains else ""
+        terrains_selected = request.form.getlist("terrain")
+        terrain = ",".join(terrains_selected) if terrains_selected else ""
         run_type = request.form.get("run_type")
         race_name = request.form.get("race_name")
         other = request.form.get("other")
@@ -146,7 +149,7 @@ def edit_entry(entry_id):
     return render_template("edit_entry.html", entry = entry, terrains = terrains, run_types = run_types)
 
 @app.route("/delete_entry/<int:entry_id>", methods=["POST"])
-def delete_entry(entry_id):
+def delete_entry_route(entry_id):
     if "user_id" not in session:
         return redirect("/login")
     
@@ -157,7 +160,7 @@ def delete_entry(entry_id):
 @app.route("/browseruns", methods=["GET"])
 def browse_runs():
     km = request.args.get("km")
-    terrain = request.args.get("terrain")
+    terrain = request.args.getlist("terrain")
     run_type = request.args.get("run_type")
     username = request.args.get("username")
 
@@ -168,7 +171,8 @@ def browse_runs():
 
 @app.route("/kisat")
 def competitions():
-        get_competitions()
+        competitions = get_competitions()
+        return render_template("kisat.html", competitions = competitions)
 
 @app.route("/kisa_sivu/<int:competition_id>", methods=["GET","POST"])
 def competition(competition_id):
@@ -197,12 +201,17 @@ def user_page(username):
     user = get_username(username)
     if not user:
         return "Käyttäjää ei löytynyt", 404
-        
-    entries = get_entries(user["id"])
-    record_run = get_max_distance(user["id"])
-    competition_count = get_competition_count(user["id"])
-    support_count = get_support_count(user["id"])
+    
+    user_id = user["id"]    
+    entries = get_entries(user_id)
+    try:
+        record_run = get_max_distance(user_id)
+        competition_count = get_competition_count(user_id)
+        support_count = get_support_count(user_id)
 
+    except Exception as e:
+        return render_template("error.html", error=str(e))
+    
     is_already_supported = False
     if "user_id" in session:
         is_already_supported = already_supported(session["user_id"], user["id"])
