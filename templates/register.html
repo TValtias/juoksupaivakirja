@@ -38,12 +38,15 @@
         <form class="register-form" method="POST" action="/register">
             <input type="hidden" name="csrf_token" value= "{{ csrf_token() }}">
             <label for="fname">Etunimi*:</label>
-            <input type="text" id="fname" name="fname" placeholder="Etunimesi" required>
+            <input type="text" id="fname" name="fname" placeholder="Etunimesi" required
+                value="{{ first_name|default('') }}">
             <label for="lname">Sukunimi*:</label>
-            <input type="text" id="lname" name="lname" placeholder="Sukunimesi" required>
+            <input type="text" id="lname" name="lname" placeholder="Sukunimesi" required
+                value="{{ last_name|default('') }}">
 
             <label for="username">Käyttäjänimi*:</label>
-            <input type="text" id="username" name="username" placeholder="Valitse käyttäjänimi" required>
+            <input type="text" id="username" name="username" placeholder="Valitse käyttäjänimi" required
+                value="{{ username|default('') }}">
 
             <label for="password">Salasana*</label>
             <input type="password" id="password" name="password" placeholder="Vähintään 8 merkkiä, numero ja erikoismerkki" required>

@@ -20,15 +20,23 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        password2 = request.form["password2"]
+        first_name = request.form.get("fname", "").strip()
+        last_name = request.form.get("lname", "").strip()
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        password2 = request.form.get("password2", "")
         
+        if not first_name or not last_name or not username:
+            error = "Täytä kaikki kentät"
+            return render_template("register.html", error=error, first_name=first_name, last_name=last_name, username=username)
+
         if not strong_password(password):
-            return render_template("register.html", error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki")
+            return render_template("register.html", error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki",
+                                   first_name=first_name, last_name=last_name, username=username)
 
         if password != password2:
-            return render_template("register.html", error="Salasanat eivät täsmää")
+            return render_template("register.html", error="Salasanat eivät täsmää",
+                                   first_name=first_name, last_name=last_name, username=username)
         else:
             hashing_pass = generate_password_hash(password)
         
@@ -36,9 +44,11 @@ def register():
             create_user(username, hashing_pass)
         
         except sqlite3.IntegrityError:
-            return render_template("register.html", error="Joku toinen ehti ensin. Valitse toinen käyttäjänimi")
+            return render_template("register.html", error="Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
+                                   first_name=first_name, last_name=last_name)
         except Exception as e:
-            return render_template("register.html", error="Virhe rekisteröinnissä: " + str(e))
+            return render_template("register.html", error="Virhe rekisteröinnissä: " + str(e),
+                                first_name=first_name, last_name=last_name, username=username)
 
         return redirect("/login")
     
