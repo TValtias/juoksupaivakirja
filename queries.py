@@ -127,12 +127,12 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
 
 def get_competitions():
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT id, name, date, location FROM competitions").fetchall()
+        return connecting.execute("SELECT id, name FROM competitions ORDER BY competitions.id").fetchall()
     
 def get_competition(competition_id):
     with get_db_connection() as connecting:
         return connecting.execute(
-            "SELECT id, name, date, location FROM competitions WHERE id = ?", (competition_id, )
+            "SELECT id, name, description, description2, banner_image, map_image FROM competitions WHERE id = ?", (competition_id, )
         ).fetchone()
     
 def get_top_results(competition_name):
