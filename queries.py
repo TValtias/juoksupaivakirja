@@ -106,8 +106,13 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         search += " AND entries.distance_km = ?"
         search_conditions.append(int(km))
     if terrain:
-        search += " AND entries.terrain = ?"
-        search_conditions.append(terrain)
+        if isinstance(terrain, list) and len(terrain) > 0:
+            placeholders = ','.join(['?'] * len(terrain))
+            search += f" AND entries.terrain IN ({placeholders})"
+            search_conditions.extend(terrain)
+        elif isinstance(terrain, str):
+            search += " AND entries.terrain = ?"
+            search_conditions.append(terrain)
     if run_type:
         search += " AND entries.run_type = ?"
         search_conditions.append(run_type)

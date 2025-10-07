@@ -39,8 +39,8 @@
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
-                <input type="number" name="km" placeholder="km" min="0" max="999" required>
-                <input type="number" name="m" placeholder="m" min="0" max="" required>
+                <input type="number" name="km" placeholder="km" min="0" max="" required>
+                <input type="number" name="m" placeholder="m" min="0" max="999" required>
             </div>
 
             <label>Aika (hh:mm:ss)*:</label>
@@ -71,7 +71,7 @@
             <input type="text" name="race_name" placeholder="">
 
             <label>Muut tiedot:</label>
-            <input type="text" name="other" placeholder="">
+            <textarea name="other" rows="4" placeholder="Lisää tietoa juoksustasi"></textarea>
 
             <button type="submit">Lisää juoksu</button>
         </form>

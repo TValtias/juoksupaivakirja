@@ -71,7 +71,7 @@
             <input type="text" name="race_name" value="{{ entry['race_name'] or ''}}">
 
             <label>Muut tiedot:</label>
-            <input type="text" name="other" value="{{ entry['other'] or ''}}">
+            <textarea name="other" rows="4" value="{{ entry['other'] or ''}}"></textarea>
 
             <button type="submit">Tallenna muutokset</button>
         </form>
