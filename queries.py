@@ -1,8 +1,8 @@
 from utils import get_db_connection
 
 def get_username(username):
-    with get_db_connection() as conn:
-        return conn.execute("SELECT * FROM users WHERE username =?", (username,)).fetchone()
+    with get_db_connection() as connecting:
+        return connecting.execute("SELECT id, username, password_hash FROM users WHERE username =?", (username,)).fetchone()
     
 def create_user(username, password_hash):
     with get_db_connection() as connecting:
@@ -20,7 +20,7 @@ def add_entry(user_id, km, m, runtime, terrain, run_type, race_name, other):
 
 def get_entries(user_id):
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT * FROM entries WHERE user_id = ? ORDER BY created_at DESC", (user_id,)
+        return connecting.execute("SELECT id, distance_km, distance_m, runtime, terrain, run_type, race_name, other, created_at FROM entries WHERE user_id = ? ORDER BY created_at DESC", (user_id,)
         ).fetchall()
     
 def get_max_distance(user_id):
@@ -76,7 +76,7 @@ def get_run_types():
 def get_entry(entry_id, user_id):
     with get_db_connection() as conn:
         return conn.execute(
-            "SELECT * FROM entries WHERE id =? AND user_id = ?",
+            "SELECT id, distance_km, distance_m, runtime, terrain, run_type, race_name, other, created_at FROM entries WHERE id = ? AND user_id = ?",
             (entry_id, user_id)
         ).fetchone()
 
@@ -127,12 +127,12 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
 
 def get_competitions():
     with get_db_connection() as connecting:
-        return connecting.execute("SELECT * FROM competitions").fetchall()
+        return connecting.execute("SELECT id, name, date, location FROM competitions").fetchall()
     
 def get_competition(competition_id):
     with get_db_connection() as connecting:
         return connecting.execute(
-            "SELECT * FROM competitions WHERE id = ?", (competition_id, )
+            "SELECT id, name, date, location FROM competitions WHERE id = ?", (competition_id, )
         ).fetchone()
     
 def get_top_results(competition_name):
