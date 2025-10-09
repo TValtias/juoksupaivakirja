@@ -43,7 +43,7 @@
                         {{ entry['run_type'] }}
                         {% if entry['race_name'] %}(Kisa: {{ entry['race_name']}}){% endif %}
                         <br>
-                        <em>{{ entry['other'] }}</em>
+                        <em class="other-note">{{ entry['other'] }}</em>
                         <br>
                         <small>{{ entry['created_at'] }}</small>
                         <a href="{{ url_for('edit_entry', entry_id=entry['id']) }}" class="button-link">Muokkaa tai poista merkintä</a>

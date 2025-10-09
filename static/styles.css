@@ -398,14 +398,13 @@ a {
     border-radius: 6px;
     padding: 10px;
     margin-bottom: 10px;
-    white-space: pe-line;
 }
 
 .comment p {
     margin: 5px 0;
 }
 
-.comment-box {
+.other-note {
     white-space: pre-line;
 }
 
