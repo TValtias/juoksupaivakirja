@@ -23,12 +23,12 @@
     </header>
 
     <div class="top-banner">
-        <h2>Rekisteröidy käyttäjäksi</h2>
+        <h2>Uusi juoksumerkintä</h2>
     </div>
 
     <main>
         <section>
-            <h2>Uusi juoksu</h2>
+            <h2>Hyvää työtä! Lisätään vielä tiedot</h2>
             <p> * kohdat pakollisia</p>
         </section>
 
@@ -36,7 +36,6 @@
             <p class="error">{{ error }}</p>
         {% endif %}
         <form class="entry-form" method="POST" action="{{ url_for('add_entry_route') }}">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
                 <input type="number" name="km" placeholder="km" min="0" max="" required>
@@ -71,7 +70,7 @@
             <input type="text" name="race_name" placeholder="">
 
             <label>Muut tiedot:</label>
-            <textarea name="other" rows="4" placeholder="Lisää tietoa juoksustasi"></textarea>
+            <textarea class="comment-box" name="other" rows="4" placeholder="Lisää tietoa juoksustasi"></textarea>
 
             <button type="submit">Lisää juoksu</button>
         </form>

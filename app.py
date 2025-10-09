@@ -1,17 +1,14 @@
 import sqlite3
-from flask import Flask
-from flask_wtf.csrf import CSRFProtect
-from flask import redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
-import secrets
-import os
-from queries import already_supported, add_support, get_top_results, get_competition, add_comments_competition, get_username, create_user, add_entry, get_entries, get_entry, get_max_distance, get_competition_count, get_support_count, search_runs, update_entry, delete_entry, get_competitions, get_comments_competition, get_terrains, get_run_types
+import config
+from queries import validate_runtime, already_supported, add_support, get_top_results, get_competition, add_comments_competition, get_username, create_user, add_entry, get_entries, get_entry, get_max_distance, get_competition_count, get_support_count, search_runs, update_entry, delete_entry, get_competitions, get_comments_competition, get_terrains, get_run_types
 
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", secrets.token_hex(20))
-csrf = CSRFProtect(app)
+app.secret_key = config.secret_key
+
 
 @app.route("/")
 def index():
@@ -26,9 +23,14 @@ def register():
         password = request.form.get("password", "")
         password2 = request.form.get("password2", "")
         
-        if not first_name or not last_name or not username:
-            error = "Täytä kaikki kentät"
-            return render_template("register.html", error=error, first_name=first_name, last_name=last_name, username=username)
+        if not first_name: 
+            return render_template("register.html", error="Etunimi on pakollinen", first_name=first_name, last_name=last_name, username=username)
+
+        if not last_name: 
+            return render_template("register.html", error="Sukunimi on pakollinen", first_name=first_name, last_name=last_name, username=username)
+
+        if not username: 
+            return render_template("register.html", error="Käyttäjänimi on pakollinen", first_name=first_name, last_name=last_name, username=username)
 
         if not strong_password(password):
             return render_template("register.html", error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki",
@@ -45,7 +47,7 @@ def register():
         
         except sqlite3.IntegrityError:
             return render_template("register.html", error="Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
-                                   first_name=first_name, last_name=last_name)
+                                   first_name=first_name, last_name=last_name,)
         except Exception as e:
             return render_template("register.html", error="Virhe rekisteröinnissä: " + str(e),
                                 first_name=first_name, last_name=last_name, username=username)
@@ -65,12 +67,11 @@ def login():
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
-            session["session_token"] = secrets.token_hex(16)
             return redirect(url_for("diary"))
         else:
-            return render_template("login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
+            return render_template("/login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
         
-    return render_template("login.html")
+    return render_template("/login.html")
 
 @app.route("/logout",)
 def logout():
@@ -97,29 +98,39 @@ def add_entry_route():
 
     if "user_id" not in session:
         return redirect("/login")
+    
     terrains = get_terrains()
     run_types = get_run_types()
     
     if request.method == "POST":
-        km = request.form.get("km")
-        m = request.form.get("m")
-        runtime = request.form.get("runtime")
+        km = request.form.get("km", "").strip()
+        m = request.form.get("m", "").strip()
+        runtime = request.form.get("runtime", "").strip()
         terrains_selected = request.form.getlist("terrain")
         terrain = ",".join(terrains_selected) if terrains_selected else ""
-        run_type = request.form.get("run_type")
-        race_name = request.form.get("race_name")
-        other = request.form.get("other")
+        run_type = request.form.get("run_type", "").strip()
+        race_name = request.form.get("race_name", "").strip()
+        other = request.form.get("other", "").strip()
 
-        if km == "" or m == "" or not runtime or not terrain or not run_type:
+        if not km or not m or not runtime or not terrain or not run_type:
             return render_template(
                 "add_entry.html",
                 error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
                 terrains = terrains,
                 run_types= run_types
             )
-
-        km = int(km)
-        m = int(m)
+        try:
+            km = int(km)
+            m = int(m)
+            if km < 0 or m < 0:
+                raise ValueError
+        except ValueError:
+            return render_template(
+                "add_entry.html",
+                error="Ilmoita matkan määrä numeroina.",
+                terrains=terrains,
+                run_types=run_types
+            )
 
         add_entry(session['user_id'], km, m, runtime, terrain, run_type, race_name, other)
         return redirect("/paivakirja")
@@ -130,7 +141,7 @@ def add_entry_route():
 
 def edit_entry(entry_id):
     if "user_id" not in session:
-        return redirect("login")
+        return redirect("/login")
     
     entry = get_entry(entry_id, session["user_id"])
     terrains = get_terrains()
@@ -140,17 +151,30 @@ def edit_entry(entry_id):
         return "Muokattavaa merkintää ei löytynyt", 403
     
     if request.method == "POST":
-        km = int(request.form.get("km"))
-        m = int(request.form.get("m"))
-        runtime = request.form.get("runtime")
+        km_str = request.form.get("km", "").strip()
+        m_str = request.form.get("m", "").strip()
+        if not km_str.isdigit() or not m_str.isdigit():
+            return render_template("edit_entry.html", entry=entry, terrains=terrains, run_types=run_types, error = "Ilmoita matkan määrä numeroina.")
+        km = int(km_str)
+        m = int(m_str)
+        if km < 0 or m < 0:
+            return render_template("edit_entry.html", entry=entry, terrains=terrains, run_types=run_types, error="Matkan määrä ei voi olla negatiivinen.")
+        
+        runtime = request.form.get("runtime", "").strip()
+        try:
+            validate_runtime(runtime)
+        except ValueError as e:
+            return render_template("edit_entry.html", entry=entry, terrains=terrains, run_types=run_types, error=str(e))
         terrains_selected = request.form.getlist("terrain")
         terrain = ",".join(terrains_selected) if terrains_selected else ""
-        run_type = request.form.get("run_type")
-        race_name = request.form.get("race_name")
-        other = request.form.get("other")
+        run_type = request.form.get("run_type", "").strip()
+        race_name = request.form.get("race_name", "").strip()
+        other = request.form.get("other", "").strip()
 
-        if not km or not m or not runtime or not terrain or not run_type:
-            return render_template("edit_entry.html", entry=entry, terrains = terrains, run_types=run_types, error="Tarkista, että * merkityt kentät on täytetty.")
+
+        if runtime == "" or not terrain or run_type == "":
+            return render_template("edit_entry.html", entry=entry, terrains=terrains, run_types=run_types, error = "Tarkista, että * merkityt kentät on täytetty.")
+        
             
         update_entry(entry_id, session["user_id"], km, m, runtime, terrain, run_type, race_name, other)
        
@@ -188,10 +212,12 @@ def competitions():
 def competition(competition_id):
     if request.method == "POST":
         if "user_id" not in session:
-            return redirect("login")
-        comment = request.form.get("comment")
-        if comment:
-            add_comments_competition(competition_id, session["user_id"], comment)
+            return redirect("/login")
+        comment = request.form.get("comment", "").strip()
+        if not comment:
+            return redirect(url_for("competition", competition_id=competition_id))
+        
+        add_comments_competition(competition_id, session["user_id"], comment)
         return redirect(url_for("competition", competition_id=competition_id,))
 
 

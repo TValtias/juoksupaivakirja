@@ -23,12 +23,12 @@
     </header>
 
     <div class="top-banner">
-        <h2>Rekisteröidy käyttäjäksi</h2>
+        <h2>Juoksupäiväkirja</h2>
     </div>
 
     <main>
         <section>
-            <h2>Muokkataan merkintää</h2>
+            <h2>Muokataan merkintää</h2>
             <p> * kohdat pakollisia</p>
         </section>
 
@@ -36,7 +36,6 @@
             <p class="error">{{ error }}</p>
         {% endif %}
         <form class="entry-form" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
                 <input type="number" name="km" value="{{ entry['distance_km']}}" min="0" max="999" required>
@@ -71,12 +70,11 @@
             <input type="text" name="race_name" value="{{ entry['race_name'] or ''}}">
 
             <label>Muut tiedot:</label>
-            <textarea name="other" rows="4" value="{{ entry['other'] or ''}}"></textarea>
+            <textarea name="other" rows="4">{{ entry['other'] or ''}}</textarea>
 
             <button type="submit">Tallenna muutokset</button>
         </form>
         <form method="POST" action= "{{ url_for('delete_entry_route', entry_id=entry['id']) }}" onsubmit="return confirm('Poistetaanko merkintä? Tätä toimintoa ei voi perua');">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit">Poista merkintä</button>
         </form>
     </main>

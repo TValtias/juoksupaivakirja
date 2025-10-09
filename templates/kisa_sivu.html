@@ -64,7 +64,6 @@
             <p>Viimeiset 15 kommenttia:</p>
             {% if session.get("user_id") %}
             <form method="post" class="comment-form">
-                <input type="hidden" name="csrf_token" value= "{{ csrf_token() }}">
                <textarea name="comment" rows="8" class="comment-textarea" placeholder="Osallistu keskusteluun" required></textarea>
                <button type="submit" class="comment-submit">Lähetä</button>
             </form>
