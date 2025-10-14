@@ -13,11 +13,15 @@
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Lenkkipolku logo" class="banner-logo">
                 </li>
                 <li><a href="/">ETUSIVU</a></li>
+                {%if session.get("user_id")%}
+                <li><a href="/logout">KIRJAUDU ULOS</a></li>
+                {%else%}
                 <li><a href="/register">REKISTERÖIDY</a></li>
                 <li><a href="/login">KIRJAUDU SISÄÄN</a></li>
-                <li><a href="/paivakirja">PÄIVÄKIRJA</a></li>
+                {%endif%}
+                <li><a href="/personal_diary">PÄIVÄKIRJA</a></li>
                 <li><a href="/browseruns">SELAA</a></li>
-                <li><a href="/kisat">KISAT</a></li>
+                <li><a href="/competition">KISAT</a></li>
             </ul>
         </nav>
     </header>
@@ -37,7 +41,7 @@
             <div>
         </section>
         <section class="right-text-section">
-            <img src="{{ url_for('static', filename='images/etusivu1.png') }}" alt="Nainen juoksee hiekka maastossa" class="pic-left">
+            <img src="{{ url_for('static', filename='images/frontpg1.png') }}" alt="Nainen juoksee hiekka maastossa" class="pic-left">
             <div class="text-right">
                 <h1>Haasta itsesi</h1>
                 <p>Oletko valmis uuteen seikkailuun?</p>
@@ -49,12 +53,12 @@
                 <h2>Seuraa kehitystäsi</h2>
                 <p>Juokse pidemmälle kuin koskaan ennen</p>
             </div>
-            <img src="{{ url_for('static', filename='images/etusivu2.png') }}" alt="Mies juoksee" class="pic-right">
+            <img src="{{ url_for('static', filename='images/frontpg2.png') }}" alt="Mies juoksee" class="pic-right">
         </section>
 
         </section>
         <section class="right-text-section">
-            <img src="{{ url_for('static', filename='images/etusivu3.png') }}" alt="Kaksi ihmistä hölkkää" class="pic-left">
+            <img src="{{ url_for('static', filename='images/frontpg3.png') }}" alt="Kaksi ihmistä hölkkää" class="pic-left">
             <div class="text-right">
                 <h1>Ole osa yhteisöä</h1>
                 <p>Inspiroidu ja keskustele</p>
@@ -65,14 +69,14 @@
             <h1>Täysin ilmainen</h1>
             <p>Liity juoksijoiden yhteisöön  </p>
             <a href="{{ url_for('register') }}">
-                <img src="{{ url_for('static', filename='images/rekisteroidy.png') }}" alt="Liity mukaan" class="kuva-linkki">
+                <img src="{{ url_for('static', filename='images/register.png') }}" alt="Liity mukaan" class="kuva-linkki">
             </a>
         </section>
         <section>
             <h2>Fani vai haastaja?</h2>
             <p>Seuraa tulevia ja menneitä kisoja</p>
             <a href="{{ url_for('competitions') }}">
-                <img src="{{ url_for('static', filename='images/selaa_kisoja.png') }}" alt="Kisasivut" class="kuva-linkki">
+                <img src="{{ url_for('static', filename='images/browse_comps.png') }}" alt="Kisasivut" class="kuva-linkki">
             </a>
         </section>
 

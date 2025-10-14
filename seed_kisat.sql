@@ -8,7 +8,7 @@ VALUES
     'Aika: 10.10.2025
     Paikka: Hyvinaito puisto 1 A, Hämeenlinna',
     'lenkkipolku_banner.png',
-    'lenkkipolku_kartta.png'
+    'lenkkipolku_map.png'
 ),
 (
     'Lenkkien yö',
@@ -17,5 +17,5 @@ VALUES
     'Aika: 11.11.2025
     Paikka: Toinen aitopaikka 14, Helsinki',
     'lenkkiyo_banner.png',
-    'lenkkiyo_kartta.png'
+    'lenkkiyo_map.png'
 );

@@ -79,7 +79,7 @@ def logout():
     return redirect("/login")
     
 
-@app.route("/paivakirja")
+@app.route("/personal_diary")
 def diary():
     if "user_id" not in session:
         return redirect("/login")
@@ -91,9 +91,9 @@ def diary():
     competition_count = get_competition_count(user_id)
     support_count = get_support_count(user_id)
 
-    return render_template("paivakirja.html", entries=entries, username=session["username"], record_run=record_run, competition_count=competition_count, support_count=support_count)
+    return render_template("personal_diary.html", entries=entries, username=session["username"], record_run=record_run, competition_count=competition_count, support_count=support_count)
 
-@app.route("/uusijuoksu", methods=["GET", "POST"])
+@app.route("/new_run", methods=["GET", "POST"])
 def add_entry_route():
 
     if "user_id" not in session:
@@ -133,7 +133,7 @@ def add_entry_route():
             )
 
         add_entry(session['user_id'], km, m, runtime, terrain, run_type, race_name, other)
-        return redirect("/paivakirja")
+        return redirect("/personal_diary")
     
     return render_template("add_entry.html", terrains = terrains, run_types = run_types)
         
@@ -178,7 +178,7 @@ def edit_entry(entry_id):
             
         update_entry(entry_id, session["user_id"], km, m, runtime, terrain, run_type, race_name, other)
        
-        return redirect("/paivakirja")
+        return redirect("/personal_diary")
 
     return render_template("edit_entry.html", entry = entry, terrains = terrains, run_types = run_types)
 
@@ -189,7 +189,7 @@ def delete_entry_route(entry_id):
     
     delete_entry(entry_id, session["user_id"])
 
-    return redirect("/paivakirja")
+    return redirect("/personal_diary")
     
 @app.route("/browseruns", methods=["GET"])
 def browse_runs():
@@ -203,12 +203,12 @@ def browse_runs():
     return render_template("browseruns.html", runs=runs)
     
 
-@app.route("/kisat")
+@app.route("/competition")
 def competitions():
         competitions = get_competitions()
-        return render_template("kisat.html", competitions = competitions)
+        return render_template("competition.html", competitions = competitions)
 
-@app.route("/kisa_sivu/<int:competition_id>", methods=["GET","POST"])
+@app.route("/comp_page/<int:competition_id>", methods=["GET","POST"])
 def competition(competition_id):
     if request.method == "POST":
         if "user_id" not in session:
@@ -229,7 +229,7 @@ def competition(competition_id):
     top_result = get_top_results(competition["name"])
 
     comments = get_comments_competition(competition_id)
-    return render_template("kisa_sivu.html", competition=competition, top_result=top_result, comments=comments)
+    return render_template("comp_page.html", competition=competition, top_result=top_result, comments=comments)
 
 
 @app.route("/kayttaja/<username>", methods=["GET", "POST"])
