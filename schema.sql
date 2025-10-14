@@ -55,10 +55,10 @@ CREATE TABLE run_types (
 );
 
 INSERT INTO run_types (name) VALUES
-('kevyt'),
-('tavoitteellinen'),
-('kilpailuun tähtäävä'),
-('kisat');
+("kevyt"),
+("tavoitteellinen"),
+("kilpailuun tähtäävä"),
+("kisat");
 
 
 CREATE TABLE terrains (
@@ -67,8 +67,8 @@ CREATE TABLE terrains (
 );
 
 INSERT INTO terrains (name) VALUES
-('juoksumatto'),
-('katu'),
-('rata'),
-('hiekka'),
-('metsä/epätasainen');
+("juoksumatto"),
+("katu"),
+("rata"),
+("hiekka"),
+("metsä/epätasainen");

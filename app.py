@@ -132,7 +132,7 @@ def add_entry_route():
                 run_types=run_types
             )
 
-        add_entry(session['user_id'], km, m, runtime, terrain, run_type, race_name, other)
+        add_entry(session["user_id"], km, m, runtime, terrain, run_type, race_name, other)
         return redirect("/personal_diary")
     
     return render_template("add_entry.html", terrains = terrains, run_types = run_types)

@@ -27,7 +27,7 @@
     </header>
 
     <div class="top-banner">
-        <h2>Käyttäjän {{ profile_user['user'] }} juoksupäiväkirja</h2>
+        <h2>Käyttäjän {{ profile_user["user"] }} juoksupäiväkirja</h2>
     </div>
 
     <main class="paivakirja-main">
@@ -41,15 +41,15 @@
                 <ul>
                     {% for entry in entries %}
                     <li>
-                        <strong>{{ entry['distance_km'] }} km {{ entry['distance_m'] }} m</strong>
-                        {{ entry['runtime'] }} -
-                        {{ entry['terrain'] }} -
-                        {{ entry['run_type'] }}
-                        {% if entry['race_name'] %}(Kisa: {{ entry['race_name']}}){% endif %}
+                        <strong>{{ entry["distance_km"] }} km {{ entry["distance_m"] }} m</strong>
+                        {{ entry["runtime"] }} -
+                        {{ entry["terrain"] }} -
+                        {{ entry["run_type"] }}
+                        {% if entry["race_name"] %}(Kisa: {{ entry["race_name"]}}){% endif %}
                         <br>
-                        <em>{{ entry['other'] }}</em>
+                        <em>{{ entry["other"] }}</em>
                         <br>
-                        <small>{{ entry['created_at'] }}</small>
+                        <small>{{ entry["created_at"] }}</small>
                     </li>
                     {% endfor %}
                 </ul>

@@ -29,14 +29,14 @@
 
     <main class="competition-page">
 
-        {%if competition['banner_image'] %}
+        {%if competition["banner_image"] %}
         <section>
             <img src="{{ url_for('static', filename='images/' + competition['banner_image']) }}" alt="Kisan banneri" class="alt-banner">
         </section>
         {% endif %}
 
 
-        {%if competition['map_image'] %}
+        {%if competition["map_image"] %}
         <section class="top-banner">
             <img src="{{ url_for('static', filename='images/' + competition['map_image']) }}" alt="Kisan kartta" class="alt-banner">
         </section>
@@ -45,8 +45,8 @@
         <section class="competition-content">
             <div class="descriptions card">
                 <h2>Kilpailun tiedot</h2>
-                <p>{{ competition['description'] }}</p>
-                <p>{{ competition['description2'] }}</p>
+                <p>{{ competition["description"] }}</p>
+                <p>{{ competition["description2"] }}</p>
             </div>
             <aside class="stats-box card">
                 <h2>TOP 10 AJAT</h2>
@@ -54,8 +54,8 @@
                     {% for result in top_result %}
                         <li>
                             <a href="{{url_for('user_page', username=result['username'])}}">
-                            {{result['username']}}</a>
-                             - {{result['runtime']}}</li>
+                            {{result["username"]}}</a>
+                             - {{result["runtime"]}}</li>
                     {%else%}    
                         <p>Tulokset päivittyvät myöhemmin</p>
                     {%endfor%}
@@ -80,11 +80,11 @@
                         <p>
                             <strong>
                                 <a href="{{url_for('user_page', username=c['username'])}}">
-                                {{c['username']}}</a>
+                                {{c["username"]}}</a>
                             </strong> 
-                            ({{c['created_at']}}):
+                            ({{c["created_at"]}}):
                         </p>
-                        <p class="other-note">{{c['comment']}}</p>
+                        <p class="other-note">{{c["comment"]}}</p>
                     </div>
                 {%else%}
                 <p>Ei kommentteja.</p>

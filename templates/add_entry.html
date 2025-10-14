@@ -54,8 +54,8 @@
                 {% for t in terrains %}
                 <label>
                     <input type="checkbox" name="terrain" value="{{ t['name']}}"
-                    {% if entry and t['name'] in entry['terrain'] %} checked {% endif %}>
-                    {{ t['name'] }}
+                    {% if entry and t["name"] in entry["terrain"] %} checked {% endif %}>
+                    {{ t["name"] }}
                 </label>
                 {% endfor %}
             </div>
@@ -64,8 +64,8 @@
                 {% for r in run_types %}
                 <label>
                     <input type="radio" name="run_type" value="{{ r['name']}}"
-                    {% if entry and r['name'] in entry['run_type'] %} checked {% endif %}>
-                    {{ r['name'] }}
+                    {% if entry and r["name"] in entry["run_type"] %} checked {% endif %}>
+                    {{ r["name"] }}
                 </label>
                 {% endfor %}
             </div>

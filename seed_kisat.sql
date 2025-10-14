@@ -1,21 +1,21 @@
 INSERT INTO competitions (name, description, description2, banner_image, map_image)
 VALUES
 (
-    'Lenkkipolun 10km',
-    'Lenkkipolun rakastettu 10km juoksu on taas täällä.
+    "Lenkkipolun 10km",
+    "Lenkkipolun rakastettu 10km juoksu on taas täällä.
     Huijaa tiesi huipulle tai kukista muut kunniakkaasti!
-    Nyt saa huijata!',
-    'Aika: 10.10.2025
-    Paikka: Hyvinaito puisto 1 A, Hämeenlinna',
-    'lenkkipolku_banner.png',
-    'lenkkipolku_map.png'
+    Nyt saa huijata!",
+    "Aika: 10.10.2025
+    Paikka: Hyvinaito puisto 1 A, Hämeenlinna",
+    "lenkkipolku_banner.png",
+    "lenkkipolku_map.png"
 ),
 (
-    'Lenkkien yö',
-    'Nyt juostaan yhdessä!
-    Ketään ei jätetä yksin, kun valaisemme lenkkipolut valotikuilla.',
-    'Aika: 11.11.2025
-    Paikka: Toinen aitopaikka 14, Helsinki',
-    'lenkkiyo_banner.png',
-    'lenkkiyo_map.png'
+    "Lenkkien yö",
+    2Nyt juostaan yhdessä!
+    Ketään ei jätetä yksin, kun valaisemme lenkkipolut valotikuilla."",
+    "Aika: 11.11.2025
+    Paikka: Toinen aitopaikka 14, Helsinki",
+    "lenkkiyo_banner.png",
+    "lenkkiyo_map.png"
 );

@@ -39,7 +39,7 @@
         <h2>Valitse kisat alla olevasta listalta</h2>
         <ul class="entries">
             {% for c in competitions %}
-                <li><a href="{{ url_for('competition', competition_id=c['id']) }}">{{ c['name'] }}</a></li>
+                <li><a href="{{ url_for('competition', competition_id=c['id']) }}">{{ c["name"] }}</a></li>
             {% else %}
                 <li>Kisoja tulossa!</li>
             {% endfor %}

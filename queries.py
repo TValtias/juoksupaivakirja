@@ -14,7 +14,7 @@ def validate_nonempty_str(value, name):
 def validate_runtime(value):
     if not isinstance(value, str):
         raise ValueError("Juoksuaika tulee olla hh:mm:ss")
-    form = r'^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$'
+    form = r"^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
     if not re.match(form, value):
         raise ValueError("Juoksuaika tulee olla esim. 00:20:45")
     hours, minutes, seconds = map(int, value.split(":"))
@@ -169,7 +169,7 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
 
     if terrain:
         if isinstance(terrain, list) and len(terrain) > 0:
-            placeholders = ','.join(['?'] * len(terrain))
+            placeholders = ",".join(["?"] * len(terrain))
             search += f" AND entries.terrain IN ({placeholders})"
             search_conditions.extend(terrain)
         elif isinstance(terrain, str):
