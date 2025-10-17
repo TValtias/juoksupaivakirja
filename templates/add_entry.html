@@ -42,19 +42,19 @@
         <form class="entry-form" method="POST" action="{{ url_for('add_entry_route') }}">
             <label> Juoksun pituus*:</label>
             <div class="inline-inputs">
-                <input type="number" name="km" placeholder="km" min="0" max="" required>
-                <input type="number" name="m" placeholder="m" min="0" max="999" required>
+        <input type="number" name="km" placeholder="km" min="0" value="{{ km or '' }}" required>
+        <input type="number" name="m" placeholder="m" min="0" max="999" value="{{ m or '' }}" required>
             </div>
 
             <label>Aika (hh:mm:ss)*:</label>
-            <input type="text" name="runtime" placeholder="esim 00:25:30" required>
+            <input type="text" name="runtime" placeholder="esim 00:25:30" value="{{ runtime or '' }}" required>
             
             <label>Maasto*:</label>
             <div class="checkbox-group">
                 {% for t in terrains %}
                 <label>
                     <input type="checkbox" name="terrain" value="{{ t['name']}}"
-                    {% if entry and t["name"] in entry["terrain"] %} checked {% endif %}>
+                    {% if terrains_selected and t["name"] in terrains_selected %} checked {% endif %}>
                     {{ t["name"] }}
                 </label>
                 {% endfor %}
@@ -64,17 +64,17 @@
                 {% for r in run_types %}
                 <label>
                     <input type="radio" name="run_type" value="{{ r['name']}}"
-                    {% if entry and r["name"] in entry["run_type"] %} checked {% endif %}>
+                    {% if run_type == r["name"] %} checked {% endif %}>
                     {{ r["name"] }}
                 </label>
                 {% endfor %}
             </div>
 
             <label>Kilpailun nimi (jos kilpailu):</label>
-            <input type="text" name="race_name" placeholder="">
+            <input type="text" name="race_name" placeholder="" value="{{race_name or ''}}">
 
             <label>Muut tiedot:</label>
-            <textarea name="other" rows="4" placeholder="Lisää tietoa juoksustasi"></textarea>
+            <textarea name="other" rows="4" placeholder="Lisää tietoa juoksustasi">{{other or ""}}</textarea>
 
             <button type="submit">Lisää juoksu</button>
         </form>

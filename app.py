@@ -117,7 +117,14 @@ def add_entry_route():
                 "add_entry.html",
                 error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
                 terrains = terrains,
-                run_types= run_types
+                run_types= run_types,
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type,
+                race_name=race_name,
+                other=other,
+                terrains_selected=terrains_selected
             )
         try:
             km = int(km)
@@ -128,13 +135,32 @@ def add_entry_route():
             return render_template(
                 "add_entry.html",
                 error="Ilmoita matkan määrä numeroina.",
-                terrains=terrains,
-                run_types=run_types
+                terrains = terrains,
+                run_types= run_types,
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type,
+                race_name=race_name,
+                other=other,
+                terrains_selected=terrains_selected
             )
-
-        add_entry(session["user_id"], km, m, runtime, terrain, run_type, race_name, other)
-        return redirect("/personal_diary")
-    
+        try:
+            add_entry(session["user_id"], km, m, runtime, terrain, run_type, race_name, other)
+            return redirect("/personal_diary")
+        except ValueError as e:
+            return render_template("add_entry.html", 
+                error=str(e),                
+                terrains = terrains,
+                run_types= run_types,
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type,
+                race_name=race_name,
+                other=other,
+                terrains_selected=terrains_selected
+                )
     return render_template("add_entry.html", terrains = terrains, run_types = run_types)
         
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
