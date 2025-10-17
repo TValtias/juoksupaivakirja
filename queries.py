@@ -5,7 +5,7 @@ import re
 
 def validate_positive_int(value, name):
     if not isinstance(value, int) or value < 0:
-        raise ValueError(f"{name} tulee olla numero")
+        raise ValueError(f"{name} tulee olla positiivinen numero")
     
 def validate_nonempty_str(value, name):
     if not isinstance(value, str) or not value.strip():
@@ -14,7 +14,7 @@ def validate_nonempty_str(value, name):
 def validate_runtime(value):
     if not isinstance(value, str):
         raise ValueError("Juoksuaika tulee olla hh:mm:ss")
-    form = r"^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+    form = r"^([0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$"
     if not re.match(form, value):
         raise ValueError("Juoksuaika tulee olla esim. 00:20:45")
     hours, minutes, seconds = map(int, value.split(":"))
