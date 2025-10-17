@@ -149,7 +149,7 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain, run_type, race_name
 
 def delete_entry(entry_id, user_id):
     validate_positive_int(entry_id, "Entry ID")
-    validate_positive_int(user_id, "User  ID")
+    validate_positive_int(user_id, "User ID")
     with get_db_connection() as connecting:
         connecting.execute("DELETE FROM entries WHERE id = ? AND user_id =?", (entry_id, user_id))
         connecting.commit()
