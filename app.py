@@ -69,9 +69,9 @@ def login():
             session["username"] = user["username"]
             return redirect(url_for("diary"))
         else:
-            return render_template("/login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
+            return render_template("login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
         
-    return render_template("/login.html")
+    return render_template("login.html")
 
 @app.route("/logout",)
 def logout():
