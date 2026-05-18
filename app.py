@@ -1,8 +1,9 @@
 import sqlite3
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, redirect, render_template, request, session, url_for, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils import get_db_connection, strong_password
 import config
+import secrets
 from queries import validate_runtime, already_supported, add_support, get_top_results, get_competition, add_comments_competition, get_username, create_user, add_entry, get_entries, get_entry, get_max_distance, get_competition_count, get_support_count, search_runs, update_entry, delete_entry, get_competitions, get_comments_competition, get_terrains, get_run_types
 
 
@@ -17,6 +18,7 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        check_csrf()
         first_name = request.form.get("fname", "").strip()
         last_name = request.form.get("lname", "").strip()
         username = request.form.get("username", "").strip()
@@ -24,13 +26,16 @@ def register():
         password2 = request.form.get("password2", "")
         
         if not first_name: 
-            return render_template("register.html", error="Etunimi on pakollinen", first_name=first_name, last_name=last_name, username=username)
+            return render_template("register.html", error="Etunimi on pakollinen", first_name=first_name, 
+                                   last_name=last_name, username=username)
 
         if not last_name: 
-            return render_template("register.html", error="Sukunimi on pakollinen", first_name=first_name, last_name=last_name, username=username)
+            return render_template("register.html", error="Sukunimi on pakollinen", first_name=first_name, 
+                                   last_name=last_name, username=username)
 
         if not username: 
-            return render_template("register.html", error="Käyttäjänimi on pakollinen", first_name=first_name, last_name=last_name, username=username)
+            return render_template("register.html", error="Käyttäjänimi on pakollinen", first_name=first_name, 
+                                   last_name=last_name, username=username)
 
         if not strong_password(password):
             return render_template("register.html", error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki",
@@ -67,11 +72,20 @@ def login():
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect(url_for("diary"))
+        
         else:
             return render_template("login.html", error="Hupsis, käyttäjätunnus tai salasana eivät täsmää")
         
     return render_template("login.html")
+
+def check_csrf():
+    token = request.form.get("csrf_token")
+    if not token:
+        abort(403)
+    if token != session.get("csrf_token"):
+        abort(403)
 
 @app.route("/logout",)
 def logout():
@@ -103,6 +117,7 @@ def add_entry_route():
     run_types = get_run_types()
     
     if request.method == "POST":
+        check_csrf()
         km = request.form.get("km", "").strip()
         m = request.form.get("m", "").strip()
         runtime = request.form.get("runtime", "").strip()
@@ -164,7 +179,6 @@ def add_entry_route():
     return render_template("add_entry.html", terrains = terrains, run_types = run_types)
         
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
-
 def edit_entry(entry_id):
     if "user_id" not in session:
         return redirect("/login")
@@ -177,6 +191,7 @@ def edit_entry(entry_id):
         return "Muokattavaa merkintää ei löytynyt", 403
     
     if request.method == "POST":
+        check_csrf()
         km_str = request.form.get("km", "").strip()
         m_str = request.form.get("m", "").strip()
         if not km_str.isdigit() or not m_str.isdigit():
@@ -213,6 +228,7 @@ def delete_entry_route(entry_id):
     if "user_id" not in session:
         return redirect("/login")
     
+    check_csrf()
     delete_entry(entry_id, session["user_id"])
 
     return redirect("/personal_diary")
@@ -237,6 +253,7 @@ def competitions():
 @app.route("/comp_page/<int:competition_id>", methods=["GET","POST"])
 def competition(competition_id):
     if request.method == "POST":
+        check_csrf()
         if "user_id" not in session:
             return redirect("/login")
         comment = request.form.get("comment", "").strip()
@@ -279,6 +296,7 @@ def user_page(username):
         is_already_supported = already_supported(session["user_id"], user["id"])
 
     if request.method == "POST":
+        check_csrf()
         if "user_id" not in session:
             return redirect("/login")
         try:
