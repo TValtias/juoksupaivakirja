@@ -326,7 +326,7 @@ def edit_entry(entry_id):
         race_name = request.form.get("race_name", "").strip()
         other = request.form.get("other", "").strip()
 
-        if runtime or not terrain or run_type:
+        if not runtime or not terrain or not run_type:
             return render_template(
                 "edit_entry.html", 
                 entry = entry, 
@@ -334,7 +334,7 @@ def edit_entry(entry_id):
                 run_types = run_types, 
                 error = "Tarkista, että * merkityt kentät on täytetty."
             )
-        
+
         update_entry(
             entry_id, 
             session["user_id"], 
