@@ -18,7 +18,6 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        check_csrf()
         first_name = request.form.get("fname", "").strip()
         last_name = request.form.get("lname", "").strip()
         username = request.form.get("username", "").strip()
