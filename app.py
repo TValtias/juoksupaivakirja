@@ -1,45 +1,23 @@
 import sqlite3
 from flask import (
-    Flask, 
-    redirect, 
-    render_template, 
-    request, 
-    session, 
-    url_for, 
-    abort
+    Flask, redirect, render_template, 
+    request, session, url_for, abort
 )
 from werkzeug.security import (
     generate_password_hash, 
     check_password_hash
 )
-from utils import (
-    get_db_connection, 
-    strong_password
-)
+from utils import strong_password
 import config
 import secrets
 from queries import (
-    validate_runtime, 
-    already_supported, 
-    add_support, 
-    get_top_results, 
-    get_competition, 
-    add_comments_competition, 
-    get_username, 
-    create_user, 
-    add_entry, 
-    get_entries, 
-    get_entry, 
-    get_max_distance, 
-    get_competition_count, 
-    get_support_count, 
-    search_runs, 
-    update_entry, 
-    delete_entry, 
-    get_competitions, 
-    get_comments_competition, 
-    get_terrains, 
-    get_run_types
+    validate_runtime, already_supported, add_support, 
+    get_top_results, get_competition, add_comments_competition, 
+    get_username, create_user, add_entry, 
+    get_entries, get_entry, get_max_distance, 
+    get_competition_count, get_support_count, search_runs, 
+    update_entry, delete_entry, get_competitions, 
+    get_comments_competition, get_terrains, get_run_types
 )
 
 app = Flask(__name__)
@@ -61,49 +39,48 @@ def register():
         if not first_name:
             return render_template(
                 "register.html", 
-                error = "Etunimi on pakollinen", 
-                first_name = first_name, 
-                last_name = last_name, 
-                username = username
+                error="Etunimi on pakollinen", 
+                first_name=first_name, 
+                last_name=last_name, 
+                username=username
             )
 
         if not last_name:
             return render_template(
                 "register.html", 
-                error = "Sukunimi on pakollinen", 
-                first_name = first_name, 
-                last_name = last_name, 
-                username = username
+                error="Sukunimi on pakollinen", 
+                first_name=first_name, 
+                last_name=last_name, 
+                username=username
             )
 
         if not username:
             return render_template(
                 "register.html", 
-                error = "Käyttäjänimi on pakollinen", 
-                first_name = first_name, 
-                last_name = last_name, 
-                username = username
+                error="Käyttäjänimi on pakollinen", 
+                first_name=first_name, 
+                last_name=last_name, 
+                username=username
             )
 
         if not strong_password(password):
             return render_template(
                 "register.html", 
-                error = "Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki",
-                first_name = first_name, 
-                last_name = last_name, 
-                username = username
+                error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki",
+                first_name=first_name, 
+                last_name=last_name, 
+                username=username
             )
 
         if password != password2:
             return render_template(
                 "register.html", 
-                error = "Salasanat eivät täsmää",
-                first_name = first_name, 
-                last_name = last_name, 
-                username = username
+                error="Salasanat eivät täsmää",
+                first_name=first_name, 
+                last_name=last_name, 
+                username=username
             )
-        else:
-            hashing_pass = generate_password_hash(password)
+        hashing_pass = generate_password_hash(password)
         
         try:
             create_user(username, hashing_pass)
@@ -111,18 +88,18 @@ def register():
         except sqlite3.IntegrityError:
             return render_template(
                 "register.html", 
-                error = "Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
-                first_name = first_name, 
-                last_name = last_name,
+                error="Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
+                first_name=first_name, 
+                last_name=last_name,
             )
         
         except Exception as e:
             return render_template(
                 "register.html", 
-                error = "Virhe rekisteröinnissä: " + str(e),
-                first_name = first_name, 
-                last_name = last_name, 
-                username = username
+                error="Virhe rekisteröinnissä: " + str(e),
+                first_name=first_name, 
+                last_name=last_name, 
+                username=username
             )
 
         return redirect("/login")
@@ -146,7 +123,7 @@ def login():
         else:
             return render_template(
                 "login.html", 
-                error = "Hupsis, käyttäjätunnus tai salasana eivät täsmää"
+                error="Hupsis, käyttäjätunnus tai salasana eivät täsmää"
             )
         
     return render_template("login.html")
@@ -177,11 +154,11 @@ def diary():
 
     return render_template(
         "personal_diary.html", 
-        entries = entries, 
-        username = session["username"], 
-        record_run = record_run, 
-        competition_count = competition_count, 
-        support_count = support_count
+        entries=entries, 
+        username=session["username"], 
+        record_run=record_run, 
+        competition_count=competition_count, 
+        support_count=support_count
     )
 
 @app.route("/new_run", methods=["GET", "POST"])
@@ -206,16 +183,16 @@ def add_entry_route():
         if not km or not m or not runtime or not terrain or not run_type:
             return render_template(
                 "add_entry.html",
-                error = "Tarkista, että kaikki * merkityt kohdat on täytetty.",
-                terrains = terrains,
-                run_types = run_types,
-                km = km,
-                m = m,
-                runtime = runtime,
-                run_type = run_type,
-                race_name = race_name,
-                other = other,
-                terrains_selected = terrains_selected
+                error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
+                terrains=terrains,
+                run_types=run_types,
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type,
+                race_name=race_name,
+                other=other,
+                terrains_selected=terrains_selected
             )
         try:
             km = int(km)
@@ -225,49 +202,44 @@ def add_entry_route():
         except ValueError:
             return render_template(
                 "add_entry.html",
-                error = "Ilmoita matkan määrä numeroina.",
-                terrains = terrains,
-                run_types = run_types,
-                km = km,
-                m = m,
-                runtime = runtime,
-                run_type = run_type,
-                race_name = race_name,
-                other = other,
-                terrains_selected = terrains_selected
+                error="Ilmoita matkan määrä numeroina.",
+                terrains=terrains,
+                run_types=run_types,
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type,
+                race_name=race_name,
+                other=other,
+                terrains_selected=terrains_selected
             )
         try:
             add_entry(
-                session["user_id"], 
-                km, 
-                m, 
-                runtime, 
-                terrain, 
-                run_type, 
-                race_name, 
-                other
+                session["user_id"], km, m, 
+                runtime, terrain, run_type, 
+                race_name, other
             )
             return redirect("/personal_diary")
         
         except ValueError as e:
             return render_template(
                 "add_entry.html", 
-                error = str(e),                
-                terrains = terrains,
-                run_types = run_types,
-                km = km,
-                m = m,
-                runtime = runtime,
-                run_type = run_type,
-                race_name = race_name,
-                other = other,
-                terrains_selected = terrains_selected
+                error=str(e),                
+                terrains=terrains,
+                run_types=run_types,
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type,
+                race_name=race_name,
+                other=other,
+                terrains_selected=terrains_selected
             )
         
     return render_template(
         "add_entry.html", 
-        terrains = terrains, 
-        run_types = run_types
+        terrains=terrains, 
+        run_types=run_types
     )
         
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
@@ -290,10 +262,10 @@ def edit_entry(entry_id):
         if not km_str.isdigit() or not m_str.isdigit():
             return render_template(
                 "edit_entry.html", 
-                entry = entry, 
-                terrains = terrains, 
-                run_types = run_types, 
-                error = "Ilmoita matkan määrä numeroina."
+                entry=entry, 
+                terrains=terrains, 
+                run_types=run_types, 
+                error="Ilmoita matkan määrä numeroina."
             )
         
         km = int(km_str)
@@ -302,10 +274,10 @@ def edit_entry(entry_id):
         if km < 0 or m < 0:
             return render_template(
                 "edit_entry.html", 
-                entry = entry, 
-                terrains = terrains, 
-                run_types = run_types, 
-                error = "Matkan määrä ei voi olla negatiivinen."
+                entry=entry, 
+                terrains=terrains, 
+                run_types=run_types, 
+                error="Matkan määrä ei voi olla negatiivinen."
             )
         
         runtime = request.form.get("runtime", "").strip()
@@ -314,10 +286,10 @@ def edit_entry(entry_id):
         except ValueError as e:
             return render_template(
                 "edit_entry.html", 
-                entry = entry, 
-                terrains = terrains, 
-                run_types = run_types, 
-                error = str(e)
+                entry=entry, 
+                terrains=terrains, 
+                run_types=run_types, 
+                error=str(e)
             )
         
         terrains_selected = request.form.getlist("terrain")
@@ -329,10 +301,10 @@ def edit_entry(entry_id):
         if not runtime or not terrain or not run_type:
             return render_template(
                 "edit_entry.html", 
-                entry = entry, 
-                terrains = terrains, 
-                run_types = run_types, 
-                error = "Tarkista, että * merkityt kentät on täytetty."
+                entry=entry, 
+                terrains=terrains, 
+                run_types=run_types, 
+                error="Tarkista, että * merkityt kentät on täytetty."
             )
 
         update_entry(
@@ -351,9 +323,9 @@ def edit_entry(entry_id):
 
     return render_template(
         "edit_entry.html", 
-        entry = entry, 
-        terrains = terrains, 
-        run_types = run_types
+        entry=entry, 
+        terrains=terrains, 
+        run_types=run_types
     )
 
 @app.route("/delete_entry/<int:entry_id>", methods=["POST"])
@@ -375,26 +347,26 @@ def browse_runs():
     username = request.args.get("username")
 
     runs = search_runs(
-        km = km, 
-        terrain = terrain, 
-        run_type = run_type, 
-        username = username
+        km=km, 
+        terrain=terrain, 
+        run_type=run_type, 
+        username=username
     )
 
     return render_template(
         "browseruns.html", 
-        runs = runs
+        runs=runs
     )
 
 @app.route("/competition")
 def competitions():
-        competitions = get_competitions()
-        return render_template(
-            "competition.html", 
-            competitions = competitions
-        )
+    competitions = get_competitions()
+    return render_template(
+        "competition.html", 
+        competitions=competitions
+    )
 
-@app.route("/comp_page/<int:competition_id>", methods=["GET","POST"])
+@app.route("/comp_page/<int:competition_id>", methods=["GET", "POST"])
 def competition(competition_id):
     if request.method == "POST":
         check_csrf()
@@ -410,7 +382,7 @@ def competition(competition_id):
             session["user_id"], 
             comment
         )
-        return redirect(url_for("competition", competition_id=competition_id,))
+        return redirect(url_for("competition", competition_id=competition_id))
 
     competition = get_competition(competition_id)
 
@@ -422,9 +394,9 @@ def competition(competition_id):
     comments = get_comments_competition(competition_id)
     return render_template(
         "comp_page.html", 
-        competition = competition, 
-        top_result = top_result, 
-        comments = comments
+        competition=competition, 
+        top_result=top_result, 
+        comments=comments
     )
 
 @app.route("/kayttaja/<username>", methods=["GET", "POST"])
@@ -463,13 +435,13 @@ def user_page(username):
 
     return render_template(
         "user_page.html", 
-        profile_user = user, 
-        entries = entries, 
-        record_run = record_run, 
-        competition_count = competition_count, 
-        support_count = support_count, 
-        is_already_supported = is_already_supported
+        profile_user=user, 
+        entries=entries, 
+        record_run=record_run, 
+        competition_count=competition_count, 
+        support_count=support_count, 
+        is_already_supported=is_already_supported
     )
         
 if __name__ == "__main__":
-    app.run
+    app.run()
