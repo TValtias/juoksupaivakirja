@@ -7,8 +7,8 @@ from utils import get_db_connection
 def validate_positive_int(value, name):
     try:
         value = int(value)
-    except (TypeError, ValueError):
-        raise ValueError(f"{name} tulee olla numero")
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{name} tulee olla numero") from exc
     if value < 0:
         raise ValueError(f"{name} tulee olla positiivinen")
     return value
@@ -20,11 +20,11 @@ def validate_nonempty_str(value, name):
 def validate_runtime(value):
     if not isinstance(value, str):
         raise ValueError("Juoksuaika tulee olla hh:mm:ss")
-    
+
     form = r"^([0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$"
     if not re.match(form, value):
         raise ValueError("Juoksuaika tulee olla esim. 00:20:45")
-    
+
     hours, minutes, seconds = map(int, value.split(":"))
 
     if hours < 0 or hours > 23:
@@ -39,11 +39,11 @@ def get_username(username):
     with get_db_connection() as conn:
         return conn.execute(
             """
-            SELECT 
-                id, username, password_hash 
-            FROM 
+            SELECT
+                id, username, password_hash
+            FROM
                 users WHERE username = ?
-            """, 
+            """,
             (username,),
         ).fetchone()
 
@@ -57,8 +57,10 @@ def create_user(username, password_hash):
                 (username, password_hash)
             )
             conn.commit()
-    except sqlite3.IntegrityError:
-        raise ValueError("Joku toinen ehti ensin. Valitse toinen käyttäjänimi")
+    except sqlite3.IntegrityError as exc:
+        raise ValueError(
+            "Joku toinen ehti ensin. Valitse toinen käyttäjänimi"
+            ) from exc
 
 def add_entry(user_id, km, m, runtime, terrain, run_type, race_name, other):
     user_id = validate_positive_int(user_id, "User ID")
@@ -78,7 +80,7 @@ def add_entry(user_id, km, m, runtime, terrain, run_type, race_name, other):
                 user_id, distance_km,
                 distance_m, runtime, terrain,
                 run_type, race_name, other
-            ) 
+            )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (user_id, km, m, runtime, terrain, run_type, race_name, other)
@@ -96,7 +98,7 @@ def get_entries(user_id):
             FROM entries
             WHERE user_id = ?
             ORDER BY created_at DESC
-            """, 
+            """,
             (user_id,),
         ).fetchall()
 
@@ -106,11 +108,11 @@ def get_entry(entry_id, user_id):
     with get_db_connection() as conn:
         return conn.execute(
             """
-            SELECT 
-                id, distance_km, distance_m, 
-                runtime, terrain, run_type, 
-                race_name, other, created_at 
-            FROM entries 
+            SELECT
+                id, distance_km, distance_m,
+                runtime, terrain, run_type,
+                race_name, other, created_at
+            FROM entries
             WHERE id = ? AND user_id = ?
             """,
             (entry_id, user_id)
@@ -119,11 +121,11 @@ def get_entry(entry_id, user_id):
 def get_max_distance(user_id):
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
-        row = conn.execute (
+        row = conn.execute(
             """
             SELECT MAX(distance_km * 1000 + distance_m)
-            FROM entries 
-            WHERE user_id = ? 
+            FROM entries
+            WHERE user_id = ?
             """,
             (user_id,)
         ).fetchone()
@@ -137,9 +139,9 @@ def get_competition_count(user_id):
         row = conn.execute(
             """
             SELECT COUNT(*)
-            FROM entries 
-            WHERE user_id = ? 
-            AND race_name IS NOT NULL 
+            FROM entries
+            WHERE user_id = ?
+            AND race_name IS NOT NULL
             AND TRIM(race_name) != ''
             """,
             (user_id,)
@@ -151,8 +153,8 @@ def get_support_count(user_id):
     with get_db_connection() as conn:
         row = conn.execute(
             """
-            SELECT COUNT(*) 
-            FROM supports 
+            SELECT COUNT(*)
+            FROM supports
             WHERE supported_id = ?
             """,
             (user_id,)
@@ -165,8 +167,8 @@ def already_supported(supporter_id, supported_id):
     with get_db_connection() as conn:
         row = conn.execute(
             """
-            SELECT 1 
-            FROM supports 
+            SELECT 1
+            FROM supports
             WHERE supporter_id = ? AND supported_id = ?
             """,
             (supporter_id, supported_id)
@@ -179,7 +181,7 @@ def add_support(supporter_id, supported_id):
     with get_db_connection() as conn:
         conn.execute(
             """
-            INSERT INTO supports (supporter_id, supported_id) 
+            INSERT INTO supports (supporter_id, supported_id)
             VALUES (?, ?)
             """,
             (supporter_id, supported_id)
@@ -209,15 +211,15 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain, run_type, race_name
     with get_db_connection() as conn:
         conn.execute(
             """
-            UPDATE entries 
-            SET 
-                distance_km = ?, 
-                distance_m = ?, 
-                runtime = ?, 
-                terrain = ?, 
-                run_type = ?, 
-                race_name = ?, 
-                other = ? 
+            UPDATE entries
+            SET
+                distance_km = ?,
+                distance_m = ?,
+                runtime = ?,
+                terrain = ?,
+                run_type = ?,
+                race_name = ?,
+                other = ?
             WHERE id = ? AND user_id = ?
             """,
             (km, m, runtime, terrain, run_type, race_name, other, entry_id, user_id)
@@ -229,7 +231,7 @@ def delete_entry(entry_id, user_id):
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
         conn.execute(
-            "DELETE FROM entries WHERE id = ? AND user_id = ?", 
+            "DELETE FROM entries WHERE id = ? AND user_id = ?",
             (entry_id, user_id),
         )
         conn.commit()
@@ -249,7 +251,7 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         search_conditions.append(km_int)
 
     if terrain:
-        if isinstance(terrain, list) and len(terrain) > 0:
+        if isinstance(terrain, list) and terrain:
             placeholders = ",".join(["?"] * len(terrain))
             search += f" AND entries.terrain IN ({placeholders})"
             search_conditions.extend(terrain)
@@ -277,8 +279,8 @@ def get_competitions():
     with get_db_connection() as conn:
         return conn.execute(
             """
-            SELECT id, name 
-            FROM competitions 
+            SELECT id, name
+            FROM competitions
             ORDER BY competitions.id
             """,
         ).fetchall()
@@ -288,10 +290,10 @@ def get_competition(competition_id):
     with get_db_connection() as conn:
         return conn.execute(
             """
-            SELECT id, name, description, description2, banner_image, map_image 
-            FROM competitions 
+            SELECT id, name, description, description2, banner_image, map_image
+            FROM competitions
             WHERE id = ?
-            """, 
+            """,
             (competition_id, )
         ).fetchone()
 
@@ -300,13 +302,13 @@ def get_top_results(competition_name):
     with get_db_connection() as conn:
         return conn.execute(
             """
-            SELECT users.username, runtime 
-            FROM entries 
-            JOIN users ON entries.user_id = users.id 
-            WHERE race_name = ? 
+            SELECT users.username, runtime
+            FROM entries
+            JOIN users ON entries.user_id = users.id
+            WHERE race_name = ?
             ORDER BY runtime ASC
             LIMIT 10
-            """, 
+            """,
             (competition_name,),
         ).fetchall()
 
@@ -318,11 +320,11 @@ def add_comments_competition(competition_id, user_id, comment):
     with get_db_connection() as conn:
         conn.execute(
             """
-            INSERT INTO competition_comments (competition_id, user_id, comment) 
+            INSERT INTO competition_comments (competition_id, user_id, comment)
             VALUES (?, ?, ?)
             """,
             (competition_id, user_id, comment)
-        ) 
+        )
         conn.commit()
 
 def get_comments_competition(competition_id):
@@ -330,15 +332,15 @@ def get_comments_competition(competition_id):
     with get_db_connection() as conn:
         return conn.execute(
             """
-            SELECT 
-                competition_comments.comment, 
-                competition_comments.created_at, 
+            SELECT
+                competition_comments.comment,
+                competition_comments.created_at,
                 users.username
-            FROM competition_comments 
+            FROM competition_comments
             JOIN users ON competition_comments.user_id = users.id
-            WHERE competition_comments.competition_id = ? 
+            WHERE competition_comments.competition_id = ?
             ORDER BY competition_comments.created_at DESC
             LIMIT 15
-            """, 
+            """,
             (competition_id,)
         ).fetchall()
