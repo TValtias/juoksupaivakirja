@@ -1,8 +1,6 @@
 import re
 import sqlite3
 
-
-
 def get_db_connection():
     connecting = sqlite3.connect("database.db")
 
@@ -16,5 +14,5 @@ def strong_password(password):
         return False
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return False
-    
+
     return True
