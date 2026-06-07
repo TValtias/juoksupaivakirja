@@ -158,8 +158,8 @@ def get_competition_count(user_id):
             SELECT COUNT(*)
             FROM entries
             WHERE user_id = ?
-            AND race_name IS NOT NULL
-            AND TRIM(race_name) != ''
+            AND competition_id IS NOT NULL
+            AND TRIM(competition_id) != ''
             """,
             (user_id,)
         ).fetchone()
@@ -313,8 +313,11 @@ def get_competition(competition_id):
             (competition_id, )
         ).fetchone()
 
-def get_top_results(competition_name):
-    validate_nonempty_str(competition_name, "Competition name")
+def get_top_results(competition_id):
+    competition_id = validate_positive_int(
+        competition_id,
+        "Competition ID"
+    )
     with get_db_connection() as conn:
         return conn.execute(
             """
@@ -325,7 +328,7 @@ def get_top_results(competition_name):
             ORDER BY runtime ASC
             LIMIT 10
             """,
-            (competition_name,),
+            (competition_id,),
         ).fetchall()
 
 def add_comments_competition(competition_id, user_id, comment):

@@ -367,7 +367,7 @@ def competition(competition_id):
 
     if competition_data is None:
         return "Kilpailua ei löytynyt", 404
-    top_result = get_top_results(competition_data["name"])
+    top_result = get_top_results(competition_id)
 
     comments = get_comments_competition(competition_id)
     return render_template(
