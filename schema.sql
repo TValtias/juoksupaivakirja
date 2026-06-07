@@ -10,12 +10,15 @@ CREATE TABLE entries (
     distance_km INTEGER NOT NULL,
     distance_m INTEGER NOT NULL,
     runtime TEXT NOT NULL,
-    terrain TEXT NOT NULL,
-    run_type TEXT NOT NULL,
-    race_name TEXT,
+    terrain_id INTEGER NOT NULL,
+    run_type_id INTEGER NOT NULL,
+    competition_id INTEGER,
     other TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (terrain_id) REFERENCES terrains(id),
+    FOREIGN KEY (run_type_id) REFERENCES run_types(id),
+    FOREIGN KEY (competition_id) REFERENCES competitions(id)
 );
 
 CREATE TABLE supports (
@@ -55,10 +58,10 @@ CREATE TABLE run_types (
 );
 
 INSERT INTO run_types (name) VALUES
-("kevyt"),
-("tavoitteellinen"),
-("kilpailuun tähtäävä"),
-("kisat");
+('kevyt'),
+('tavoitteellinen'),
+('kilpailuun tähtäävä'),
+('kisat');
 
 
 CREATE TABLE terrains (
@@ -67,8 +70,8 @@ CREATE TABLE terrains (
 );
 
 INSERT INTO terrains (name) VALUES
-("juoksumatto"),
-("katu"),
-("rata"),
-("hiekka"),
-("metsä/epätasainen");
+('juoksumatto'),
+('katu'),
+('rata'),
+('hiekka'),
+('metsä/epätasainen');
