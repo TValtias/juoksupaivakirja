@@ -79,7 +79,7 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, 
             INSERT INTO entries (
                 user_id, distance_km,
                 distance_m, runtime, terrain_id,
-                run_type_id, race_name, other
+                run_type_id, competition_id, other
             )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
@@ -99,12 +99,13 @@ def get_entries(user_id):
                 e.runtime,
                 t.name AS terrain,
                 r.name AS run_type,
-                e.race_name,
+                c.name AS race_name,
                 e.other,
                 e.created_at
             FROM entries e
             LEFT JOIN terrains t ON e.terrain_id = t.id
             LEFT JOIN run_types r ON e.run_type_id = r.id
+            LEFT JOIN competitions c ON e.competition_id =c.id
             WHERE e.user_id = ?
             ORDER BY e.created_at DESC
             """,
@@ -124,10 +125,11 @@ def get_entry(entry_id, user_id):
                 e.runtime,
                 e.terrain_id,
                 e.run_type_id,
-                e.race_name,
+                c.name AS e.race_name,
                 e.other,
                 e.created_at
             FROM entries e
+            LEFT JOIN competitions c ON e.competition_id = c.id
             WHERE e.id = ? AND e.user_id = ?
             """,
             (entry_id, user_id)
@@ -264,7 +266,7 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
     """
     search_conditions = []
 
-    if km:
+    if km is not None:
         km_int = validate_positive_int(km, "Distance_km")
         search += " AND entries.distance_km = ?"
         search_conditions.append(km_int)
@@ -319,7 +321,7 @@ def get_top_results(competition_name):
             SELECT users.username, runtime
             FROM entries
             JOIN users ON entries.user_id = users.id
-            WHERE race_name = ?
+            WHERE competition_id = ?
             ORDER BY runtime ASC
             LIMIT 10
             """,
