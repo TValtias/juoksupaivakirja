@@ -52,21 +52,24 @@
             <div class="rows">
                 <label for="terrain">Maasto:</label>
                 <div class="checkbox-group">
-                    <label><input type="checkbox" name="terrain" value="juoksumatto">Juoksumatto</label>
-                    <label><input type="checkbox" name="terrain" value="katu">Katu</label>
-                    <label><input type="checkbox" name="terrain" value="rata">Rata</label>
-                    <label><input type="checkbox" name="terrain" value="hiekkatie">Hiekkatie</label>
-                    <label><input type="checkbox" name="terrain" value="metsä/epätasainen">Metsä/epätasainen</label>
+                {% for t in terrains %}
+                <label>
+                    <input type="checkbox" name="terrain_id" value="{{ t['id'] }}">
+                    {{ t['name'] }}
+                </label>
+                {% endfor %}
                 </div>
             </div>
 
             <div class="rows">
                 <label>Juoksun tyyppi:</label>
                 <div class="radio-group">
-                    <label><input type="radio" name="run_type" value="kevyt">Kevyt</label>
-                    <label><input type="radio" name="run_type" value="tavoitteellinen">Tavoitteellinen</label>
-                    <label><input type="radio" name="run_type" value="kilpailuun tähtäävä">Kilpailuun tähtäävä</label>
-                    <label><input type="radio" name="run_type" value="kisat">Kisat</label>
+                    {% for r in run_types %}
+                    <label>
+                        <input type="radio" name="run_type_id" value="{{ r['id'] }}">
+                        {{ r['name'] }}
+                    </label>
+                    {% endfor %}
                 </div>
             </div>
 
