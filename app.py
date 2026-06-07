@@ -326,14 +326,16 @@ def browse_runs():
 
     runs = search_runs(
         km=km,
-        terrain_ids=terrain_ids,
-        run_type_id=run_type_id,
+        terrain=terrain_id,
+        run_type=run_type_id,
         username=username
     )
 
     return render_template(
         "browseruns.html",
-        runs=runs
+        runs=runs,
+        terrains=get_terrains(),
+        run_types=get_run_types()
     )
 
 @app.route("/competition")
