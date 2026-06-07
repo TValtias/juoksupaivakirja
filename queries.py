@@ -275,9 +275,9 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
             search_conditions.extend(terrain_ids)
 
     if run_type:
-    run_type = validate_positive_int(run_type, "Run type ID")
-    search += " AND entries.run_type_id = ?"
-    search_conditions.append(run_type)
+        run_type = validate_positive_int(run_type, "Run type ID")
+        search += " AND entries.run_type_id = ?"
+        search_conditions.append(run_type)
 
     if username:
         validate_nonempty_str(username, "Username")
