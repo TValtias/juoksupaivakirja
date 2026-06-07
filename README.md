@@ -1,5 +1,7 @@
 # juoksupaivakirja
 
+## Sovelluksen ominaisuudet
+
 - Käyttäjä pystyy luomaan tunnuksen ja kirjautumaan sisään sovellukseen.
 - Käyttäjä pystyy lisäämään sovellukseen juoksulenkkinsä tiedot päiväkirja-muodossa kirjauduttuaan sisään sivulla päiväkirja.
 - Käyttäjä pystyy muokkaamaan ja poistamaan lisäämiään lenkkien tietoja päiväkirja-sivulla.
@@ -10,28 +12,39 @@
 - Käyttäjä pystyy katsoa kisasivuja ja käydä keskustelua muiden kanssa niistä kommenttialueella. Käyttäjä pystyy katsomaan tilastoja TOP 10 parhaista kisa-ajoista.
 
 
-OHJEET SOVELLUKSEN KOKEILUUN MAC,(Linux / Windows käyttäjillä saattaa olla hieman eri komennot):
+## Asennusohjeet
 
-Varmista, että sinulla on:
+### Vaatimukset
+
 - python 3.10 +
 - pip
 
-  1.) Lataa repo:
+###  1.) Lataa repo:
+```bash
      git clone <repo_url>
      cd juoksupaivakirja
+```
 
-  2.)Aktivoidaan virtuaaliympäristö:
+ ### 2.)Aktivoidaan virtuaaliympäristö:
+ ```bash
     python3 -m venv venv
     source venv/bin/activate
+```
 
-  3.)Aktivoidaan tarvittavat riippuvuudet:
+ ### 3.)Aktivoidaan tarvittavat riippuvuudet:
+  ```bash  
     pip install -r requirements.txt
+```
 
-  4.)Luo tietokanta:
+ ### 4.)Luo tietokanta:
+ ```bash
     sqlite3 database.db < schema.sql
     sqlite3 database.db < seed_kisat.sql
+```
 
-  5.)Käynnistä:
+ ### 5.)Käynnistä:
+ ```bash
     flask run
+```
 
-  HUOM! Päiväkirjan käyttö (merkintöjen luonti, muokkaus, poisto) vaatii rekisteröinnin. Etusivu, kisat ja selaa toimivat ilman.
+  **HUOM!** Päiväkirjan käyttö (merkintöjen luonti, muokkaus, poisto) vaatii rekisteröinnin. Etusivu, kisat ja selaa toimivat ilman.
