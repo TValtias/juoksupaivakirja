@@ -163,13 +163,12 @@ def add_entry_route():
         km = request.form.get("km", "").strip()
         m = request.form.get("m", "").strip()
         runtime = request.form.get("runtime", "").strip()
-        terrains_selected = request.form.getlist("terrain")
-        terrain = ",".join(terrains_selected) if terrains_selected else ""
-        run_type = request.form.get("run_type", "").strip()
-        race_name = request.form.get("race_name", "").strip()
+        terrain_id = request.form.get("terrain_id")
+        run_type_id = request.form.get("run_type_id")
+        competition_id = request.form.get("competition_id")
         other = request.form.get("other", "").strip()
 
-        if not km or not m or not runtime or not terrain or not run_type:
+        if not km or not m or not runtime or not terrain_id or not run_type_id:
             return render_template(
                 "add_entry.html",
                 error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
@@ -178,10 +177,9 @@ def add_entry_route():
                 km=km,
                 m=m,
                 runtime=runtime,
-                run_type=run_type,
-                race_name=race_name,
+                run_type=run_type_id,
                 other=other,
-                terrains_selected=terrains_selected
+                terrains_selected=[]
             )
         try:
             km = int(km)
@@ -197,32 +195,16 @@ def add_entry_route():
                 km=km,
                 m=m,
                 runtime=runtime,
-                run_type=run_type,
-                race_name=race_name,
+                run_type=run_type_id,
                 other=other,
-                terrains_selected=terrains_selected
+                terrains_selected=[]
             )
-        try:
-            add_entry(
-                session["user_id"], km, m,
-                runtime, terrain, run_type,
-                race_name, other
-            )
-            return redirect("/personal_diary")
-        except ValueError as e:
-            return render_template(
-                "add_entry.html",
-                error=str(e),
-                terrains=terrains,
-                run_types=run_types,
-                km=km,
-                m=m,
-                runtime=runtime,
-                run_type=run_type,
-                race_name=race_name,
-                other=other,
-                terrains_selected=terrains_selected
-            )
+        add_entry(
+            session["user_id"], km, m,
+            runtime, terrain_id, run_type_id,
+            competition_id, other
+        )
+        return redirect("/personal_diary")
     return render_template(
         "add_entry.html",
         terrains=terrains,
@@ -239,10 +221,16 @@ def edit_entry(entry_id):
 
     if entry is None:
         return "Muokattavaa merkintää ei löytynyt", 403
+    
     if request.method == "POST":
         check_csrf()
         km_str = request.form.get("km", "").strip()
         m_str = request.form.get("m", "").strip()
+        runtime = request.form.get("runtime", "").strip()
+        terrain_id = request.form.get("terrain_id")
+        run_type_id = request.form.get("run_type_id")
+        competition_id = request.form.get("competition_id")
+        other = request.form.get("other", "").strip()
 
         if not km_str.isdigit() or not m_str.isdigit():
             return render_template(
@@ -254,7 +242,6 @@ def edit_entry(entry_id):
             )
         km = int(km_str)
         m = int(m_str)
-
         if km < 0 or m < 0:
             return render_template(
                 "edit_entry.html",
@@ -263,7 +250,7 @@ def edit_entry(entry_id):
                 run_types=run_types,
                 error="Matkan määrä ei voi olla negatiivinen."
             )
-        runtime = request.form.get("runtime", "").strip()
+
         try:
             validate_runtime(runtime)
         except ValueError as e:
@@ -274,19 +261,30 @@ def edit_entry(entry_id):
                 run_types=run_types,
                 error=str(e)
             )
-        terrains_selected = request.form.getlist("terrain")
-        terrain = ",".join(terrains_selected) if terrains_selected else ""
-        run_type = request.form.get("run_type", "").strip()
-        race_name = request.form.get("race_name", "").strip()
-        other = request.form.get("other", "").strip()
 
-        if not runtime or not terrain or not run_type:
+        if not runtime:
             return render_template(
                 "edit_entry.html",
                 entry=entry,
                 terrains=terrains,
                 run_types=run_types,
-                error="Tarkista, että * merkityt kentät on täytetty."
+                error="Muista lisätä juoksuaikasi."
+            )
+        if not terrain_id:
+            return render_template(
+                "edit_entry.html",
+                entry=entry,
+                terrains=terrains,
+                run_types=run_types,
+                error="Muista lisätä maasto."
+            )
+        if not run_type_id:
+            return render_template(
+                "edit_entry.html",
+                entry=entry,
+                terrains=terrains,
+                run_types=run_types,
+                error="Muista lisätä juoksutyyppi."
             )
 
         update_entry(
@@ -295,9 +293,9 @@ def edit_entry(entry_id):
             km,
             m,
             runtime,
-            terrain,
-            run_type,
-            race_name,
+            terrain_id,
+            run_type_id,
+            competition_id,
             other
         )
         return redirect("/personal_diary")
@@ -322,14 +320,14 @@ def delete_entry_route(entry_id):
 @app.route("/browseruns", methods=["GET"])
 def browse_runs():
     km = request.args.get("km")
-    terrain = request.args.getlist("terrain")
-    run_type = request.args.get("run_type")
+    terrain_id = request.args.getlist("terrain_id")
+    run_type_id = request.args.get("run_type_id")
     username = request.args.get("username")
 
     runs = search_runs(
         km=km,
-        terrain=terrain,
-        run_type=run_type,
+        terrain_ids=terrain_ids,
+        run_type_id=run_type_id,
         username=username
     )
 
@@ -367,7 +365,7 @@ def competition(competition_id):
 
     if competition_data is None:
         return "Kilpailua ei löytynyt", 404
-    top_result = get_top_results(competition["name"])
+    top_result = get_top_results(competition_data["name"])
 
     comments = get_comments_competition(competition_id)
     return render_template(
