@@ -1,7 +1,7 @@
 import sqlite3
 import re
 
-from utils import get_db_connection
+from utils import get_db_connection, validate_runtime
 
 
 def validate_positive_int(value, name):
@@ -16,23 +16,6 @@ def validate_positive_int(value, name):
 def validate_nonempty_str(value, name):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{name} ei saa olla tyhjä.")
-
-def validate_runtime(value):
-    if not isinstance(value, str):
-        raise ValueError("Juoksuaika tulee olla hh:mm:ss")
-
-    form = r"^([0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$"
-    if not re.match(form, value):
-        raise ValueError("Juoksuaika tulee olla esim. 00:20:45")
-
-    hours, minutes, seconds = map(int, value.split(":"))
-
-    if hours < 0 or hours > 23:
-        raise ValueError("Tuntien tulee olla väliltä 00-23")
-    if minutes < 0 or minutes > 59:
-        raise ValueError("Minuuttien tulee olla väliltä 00-59")
-    if seconds < 0 or seconds > 59:
-        raise ValueError("Sekuntien tulee olla väliltä 00-59")
 
 def get_username(username):
     validate_nonempty_str(username, "Username")

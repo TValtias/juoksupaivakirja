@@ -9,9 +9,9 @@ from werkzeug.security import (
     check_password_hash
 )
 import config
-from utils import strong_password
+from utils import strong_password, validate_entry_form, validate_runtime
 from queries import (
-    validate_runtime, already_supported, add_support,
+    already_supported, add_support,
     get_top_results, get_competition, add_comments_competition,
     get_username, create_user, add_entry,
     get_entries, get_entry, get_max_distance,
@@ -72,14 +72,14 @@ def register():
         except sqlite3.IntegrityError:
             return render_template(
                 "register.html",
-                errors="Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
+                errors=["Joku toinen ehti ensin. Valitse toinen käyttäjänimi"],
                 first_name=first_name,
                 last_name=last_name,
             )
         except Exception as e:
             return render_template(
                 "register.html",
-                errors="Virhe rekisteröinnissä: " + str(e),
+                errors=[f"Virhe rekisteröinnissä: {e}"],
                 first_name=first_name,
                 last_name=last_name,
                 username=username
@@ -155,10 +155,14 @@ def add_entry_route():
         competition_id = request.form.get("competition_id")
         other = request.form.get("other", "").strip()
 
-        if not km or not m or not runtime or not terrain_id or not run_type_id:
+        errors, km, m = validate_entry_form(
+            km, m, runtime, terrain_id, run_type_id
+        )
+
+        if errors:
             return render_template(
                 "add_entry.html",
-                error="Tarkista, että kaikki * merkityt kohdat on täytetty.",
+                errors=errors,
                 terrains=terrains,
                 run_types=run_types,
                 km=km,
@@ -168,24 +172,7 @@ def add_entry_route():
                 other=other,
                 terrains_selected=[]
             )
-        try:
-            km = int(km)
-            m = int(m)
-            if km < 0 or m < 0:
-                raise ValueError
-        except ValueError:
-            return render_template(
-                "add_entry.html",
-                error="Ilmoita matkan määrä numeroina.",
-                terrains=terrains,
-                run_types=run_types,
-                km=km,
-                m=m,
-                runtime=runtime,
-                run_type=run_type_id,
-                other=other,
-                terrains_selected=[]
-            )
+
         add_entry(
             session["user_id"], km, m,
             runtime, terrain_id, run_type_id,
@@ -219,59 +206,23 @@ def edit_entry(entry_id):
         competition_id = request.form.get("competition_id")
         other = request.form.get("other", "").strip()
 
-        if not km_str.isdigit() or not m_str.isdigit():
-            return render_template(
-                "edit_entry.html",
-                entry=entry,
-                terrains=terrains,
-                run_types=run_types,
-                error="Ilmoita matkan määrä numeroina."
-            )
-        km = int(km_str)
-        m = int(m_str)
-        if km < 0 or m < 0:
-            return render_template(
-                "edit_entry.html",
-                entry=entry,
-                terrains=terrains,
-                run_types=run_types,
-                error="Matkan määrä ei voi olla negatiivinen."
-            )
+        errors, km, m = validate_entry_form(
+            km, m, runtime, terrain_id, run_type_id
+        )
 
-        try:
-            validate_runtime(runtime)
-        except ValueError as e:
+        if errors:
             return render_template(
                 "edit_entry.html",
+                errors=errors,
                 entry=entry,
                 terrains=terrains,
                 run_types=run_types,
-                error=str(e)
-            )
-
-        if not runtime:
-            return render_template(
-                "edit_entry.html",
-                entry=entry,
-                terrains=terrains,
-                run_types=run_types,
-                error="Muista lisätä juoksuaikasi."
-            )
-        if not terrain_id:
-            return render_template(
-                "edit_entry.html",
-                entry=entry,
-                terrains=terrains,
-                run_types=run_types,
-                error="Muista lisätä maasto."
-            )
-        if not run_type_id:
-            return render_template(
-                "edit_entry.html",
-                entry=entry,
-                terrains=terrains,
-                run_types=run_types,
-                error="Muista lisätä juoksutyyppi."
+                km=km,
+                m=m,
+                runtime=runtime,
+                run_type=run_type_id,
+                other=other,
+                terrains_selected=[]
             )
 
         update_entry(
