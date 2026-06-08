@@ -147,8 +147,8 @@ def add_entry_route():
     run_types = get_run_types()
     if request.method == "POST":
         check_csrf()
-        km = request.form.get("km", "").strip()
-        m = request.form.get("m", "").strip()
+        km_str = request.form.get("km", "").strip()
+        m_str = request.form.get("m", "").strip()
         runtime = request.form.get("runtime", "").strip()
         terrain_id = request.form.get("terrain_id")
         run_type_id = request.form.get("run_type_id")
@@ -156,7 +156,7 @@ def add_entry_route():
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
-            km, m, runtime, terrain_id, run_type_id
+            km_str, m_str, runtime, terrain_id, run_type_id
         )
 
         if errors:
@@ -207,7 +207,7 @@ def edit_entry(entry_id):
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
-            km, m, runtime, terrain_id, run_type_id
+            km_str, m_str, runtime, terrain_id, run_type_id
         )
 
         if errors:

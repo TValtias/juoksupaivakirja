@@ -20,6 +20,9 @@ def strong_password(password):
 def validate_entry_form(km_str, m_str, runtime, terrain_id, run_type_id):
         errors = []
 
+        km = None
+        m = None
+
         try:
             km =int(km_str)
             m = int(m_str)
@@ -28,8 +31,6 @@ def validate_entry_form(km_str, m_str, runtime, terrain_id, run_type_id):
                 errors.append("Matkan määrä ei voi olla negatiivinen")
         except ValueError:
             errors.append("Juoksun pituus tulee ilmoittaa numeroina")
-            km = None
-            m = None
 
         if not runtime:
             errors.append("Täytä juoksun aika")
