@@ -33,17 +33,12 @@ def get_username(username):
 def create_user(username, password_hash):
     validate_nonempty_str(username, "Username")
     validate_nonempty_str(password_hash, "Password hash")
-    try:
-        with get_db_connection() as conn:
-            conn.execute(
-                "INSERT INTO users (username, password_hash) VALUES (?, ?)",
-                (username, password_hash)
-            )
-            conn.commit()
-    except sqlite3.IntegrityError as exc:
-        raise ValueError(
-            "Joku toinen ehti ensin. Valitse toinen käyttäjänimi"
-            ) from exc
+    with get_db_connection() as conn:
+        conn.execute(
+            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+            (username, password_hash)
+        )
+        conn.commit()
 
 def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, other):
     user_id = validate_positive_int(user_id, "User ID")
