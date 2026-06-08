@@ -35,64 +35,51 @@ def register():
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
         password2 = request.form.get("password2", "")
+
+        errors = []
         if not first_name:
-            return render_template(
-                "register.html",
-                error="Etunimi on pakollinen",
-                first_name=first_name,
-                last_name=last_name,
-                username=username
-            )
+            errors.append("Etunimi puuttuu")
 
         if not last_name:
-            return render_template(
-                "register.html",
-                error="Sukunimi on pakollinen",
-                first_name=first_name,
-                last_name=last_name,
-                username=username
-            )
+            errors.append("Sukunimi puuttuu")
 
         if not username:
-            return render_template(
-                "register.html",
-                error="Käyttäjänimi on pakollinen",
-                first_name=first_name,
-                last_name=last_name,
-                username=username
-            )
+            errors.append("Käyttäjänimi puuttuu")
 
-        if not strong_password(password):
-            return render_template(
-                "register.html",
-                error="Salasanan tulee sisältää vähintään 8 merkkiä, numero ja erikoismerkki",
-                first_name=first_name,
-                last_name=last_name,
-                username=username
+        if not password:
+            errors.append("Salasana puuttuu")
+
+        elif not strong_password(password):
+            errors.append(
+                "Salasanan tulee sisältää vähintään 8 merkkiä, numeron ja erikoismerkin"
             )
 
         if password != password2:
+            errors.append("Salasanat eivät täsmää")
+
+        if errors:
             return render_template(
                 "register.html",
-                error="Salasanat eivät täsmää",
+                errors=errors,
                 first_name=first_name,
                 last_name=last_name,
                 username=username
             )
+
         hashing_pass = generate_password_hash(password)
         try:
             create_user(username, hashing_pass)
         except sqlite3.IntegrityError:
             return render_template(
                 "register.html",
-                error="Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
+                errors="Joku toinen ehti ensin. Valitse toinen käyttäjänimi",
                 first_name=first_name,
                 last_name=last_name,
             )
         except Exception as e:
             return render_template(
                 "register.html",
-                error="Virhe rekisteröinnissä: " + str(e),
+                errors="Virhe rekisteröinnissä: " + str(e),
                 first_name=first_name,
                 last_name=last_name,
                 username=username
