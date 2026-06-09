@@ -51,11 +51,11 @@
             <input type="text" name="runtime" value="{{ entry['runtime']}}" required>
             
             <label>Maasto*:</label>
-            <div class="checkbox-group">
+            <div class="radio-group">
                 {% for t in terrains %}
                 <label>
-                    <input type="checkbox" name="terrain" value="{{ t["name"]}}"
-                    {% if entry and t["name"] in entry["terrain"] %} checked {% endif %}>
+                    <input type="radio" name="terrain_id" value="{{ t["id"]}}"
+                    {% if entry['terrain_id'] == t['id'] %} checked {% endif %}>
                     {{ t["name"] }}
                 </label>
                 {% endfor %}
@@ -65,21 +65,24 @@
                 {% for r in run_types %}
                 <label>
                     <input type="radio" name="run_type" value="{{ r['name']}}"
-                    {% if entry and r["name"] in entry["run_type"] %} checked {% endif %}>
+                    {% if entry['run_type_id'] == r['id'] %} checked {% endif %}>
                     {{ r["name"] }}
                 </label>
                 {% endfor %}
             </div>
 
             <label>Kilpailun nimi (jos kilpailu):</label>
-            <input type="text" name="race_name" value="{{ entry['race_name'] or ''}}">
+            <input type="number" name="competition_id" value="{{ entry['competition_id'] or ''}}">
 
             <label>Muut tiedot:</label>
             <textarea name="other" rows="4">{{ entry["other"] or ""}}</textarea>
 
             <button type="submit">Tallenna muutokset</button>
         </form>
-        <form method="POST" action= "{{ url_for('delete_entry_route', entry_id=entry['id']) }}" onsubmit="return confirm('Poistetaanko merkintä? Tätä toimintoa ei voi perua');">
+        <form 
+            method="POST" 
+            action= "{{ url_for('delete_entry_route', entry_id=entry['id']) }}" 
+            onsubmit="return confirm('Poistetaanko merkintä? Tätä toimintoa ei voi perua');">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             <button type="submit">Poista merkintä</button>
         </form>
