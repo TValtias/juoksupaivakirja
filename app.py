@@ -152,7 +152,7 @@ def add_entry_route():
         runtime = request.form.get("runtime", "").strip()
         terrain_id = request.form.get("terrain_id")
         run_type_id = request.form.get("run_type_id")
-        competition_id = request.form.get("competition_id")
+        competition_id = request.form.get("competition_id").strip()
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
@@ -176,7 +176,7 @@ def add_entry_route():
         add_entry(
             session["user_id"], km, m,
             runtime, terrain_id, run_type_id,
-            competition_id, other
+            competition_id if competition_id else None, other
         )
         return redirect("/personal_diary")
     return render_template(
@@ -233,8 +233,8 @@ def edit_entry(entry_id):
             runtime,
             terrain_id,
             run_type_id,
-            competition_id,
-            other
+            competition_id if competition_id else None,
+            other if other else None
         )
         return redirect("/personal_diary")
 
