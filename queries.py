@@ -240,11 +240,12 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         JOIN users ON entries.user_id = users.id
         LEFT JOIN terrains t ON entries.terrain_id = t.id
         LEFT JOIN run_types r ON entries.run_type_id = r.id
+        LEFT JOIN competitions c ON entries.competition_id = c.id
         WHERE 1=1
     """
     search_conditions = []
 
-    if km is not None:
+    if km is not None and km != "":
         km_int = validate_positive_int(km, "Distance_km")
         search += " AND entries.distance_km = ?"
         search_conditions.append(km_int)
