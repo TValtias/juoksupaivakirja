@@ -55,8 +55,8 @@
             <div class="checkbox-group">
                 {% for t in terrains %}
                 <label>
-                    <input type="checkbox" name="terrain" value="{{ t['name']}}"
-                    {% if terrains_selected and t["name"] in terrains_selected %} checked {% endif %}>
+                    <input type="radio" name="terrain_id" value="{{ t['id']}}"
+                    {% if terrains_selected and terrains_selected == t['id'] %} checked {% endif %}>
                     {{ t["name"] }}
                 </label>
                 {% endfor %}
@@ -65,15 +65,15 @@
             <div class="radio-group">
                 {% for r in run_types %}
                 <label>
-                    <input type="radio" name="run_type" value="{{ r['name']}}"
-                    {% if run_type == r["name"] %} checked {% endif %}>
+                    <input type="radio" name="run_type_id" value="{{ r['id']}}"
+                    {% if run_type == r["id"] %} checked {% endif %}>
                     {{ r["name"] }}
                 </label>
                 {% endfor %}
             </div>
 
-            <label>Kilpailun nimi (jos kilpailu):</label>
-            <input type="text" name="race_name" placeholder="" value="{{race_name or ''}}">
+            <label>Kilpailun ID (jos kilpailu):</label>
+            <input type="number" name="competition_id" placeholder="" value="{{competition_id or ''}}">
 
             <label>Muut tiedot:</label>
             <textarea name="other" rows="4" placeholder="Lisää tietoa juoksustasi">{{other or ""}}</textarea>
