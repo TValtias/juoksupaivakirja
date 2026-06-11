@@ -25,10 +25,15 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
+    """ Show's the applications main page"""
     return render_template("base.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """User's registration.
+    GET shows the registration form
+    POST validates user input and creates a new user.
+    """
     if request.method == "POST":
         first_name = request.form.get("fname", "").strip()
         last_name = request.form.get("lname", "").strip()
@@ -90,6 +95,10 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """User login.
+    GET shows login page
+    POST checks that username and password match, creates a session and CSRF-token
+    """
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -108,6 +117,8 @@ def login():
     return render_template("login.html")
 
 def check_csrf():
+    """Checks that form's CSRF-token matches the session token. 
+    Error 403 if it does not match."""
     token = request.form.get("csrf_token")
     if not token:
         abort(403)
@@ -116,11 +127,15 @@ def check_csrf():
 
 @app.route("/logout")
 def logout():
+    """Logs the person out. 
+    Clears session and redirects to login page."""
     session.clear()
     return redirect("/login")
 
 @app.route("/personal_diary")
 def diary():
+    """Shows's the person's running diary,
+    including entries, supporters and statistics from runs."""
     if "user_id" not in session:
         return redirect("/login")
     user_id = session["user_id"]
@@ -141,6 +156,9 @@ def diary():
 
 @app.route("/new_run", methods=["GET", "POST"])
 def add_entry_route():
+    """Allows user to create new entries to running diary.
+    GET shows form to add information regarding the run
+    POST validates user input and saves it to database."""
     if "user_id" not in session:
         return redirect("/login")
     terrains = get_terrains()
@@ -187,6 +205,9 @@ def add_entry_route():
 
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
+    """Allows user to edit entries in their running diary
+    GET shows the form with existing information, allowing editing
+    POST validates new user input and overwrites the earlier data with new input"""
     if "user_id" not in session:
         return redirect("/login")
     entry = get_entry(entry_id, session["user_id"])
@@ -247,6 +268,8 @@ def edit_entry(entry_id):
 
 @app.route("/delete_entry/<int:entry_id>", methods=["POST"])
 def delete_entry_route(entry_id):
+    """Allows user to delete existing entry from diary.
+    Redirects back to diary after deletion."""
     if "user_id" not in session:
         return redirect("/login")
     check_csrf()
@@ -257,6 +280,7 @@ def delete_entry_route(entry_id):
 
 @app.route("/browseruns", methods=["GET"])
 def browse_runs():
+    """Allows users to search saved running entries based on search criteria"""
     km = request.args.get("km")
     terrain_id = request.args.getlist("terrain_id")
     run_type_id = request.args.get("run_type_id")
@@ -278,6 +302,7 @@ def browse_runs():
 
 @app.route("/competition")
 def competitions():
+    """Shows a listing of all competitions added to the site"""
     competition_list = get_competitions()
     return render_template(
         "competition.html",
@@ -286,6 +311,9 @@ def competitions():
 
 @app.route("/comp_page/<int:competition_id>", methods=["GET", "POST"])
 def competition(competition_id):
+    """Shows a page of individual competition.
+    GET Shows the information of the competition, top runners and comments
+    POST adds a comment to the competition page. Requires login."""
     if request.method == "POST":
         check_csrf()
         if "user_id" not in session:
@@ -317,6 +345,9 @@ def competition(competition_id):
 
 @app.route("/kayttaja/<username>", methods=["GET", "POST"])
 def user_page(username):
+    """Shows user's public userpage, run etries and statistics.
+    GET shows the profile information and checks if user has cheered/supported the profile
+    POST let's the user cheer /support the runner with a button"""
     user = get_username(username)
     if not user:
         return "Käyttäjää ei löytynyt", 404
