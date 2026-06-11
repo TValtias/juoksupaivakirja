@@ -1,3 +1,5 @@
+"""Utility and validation functions"""
+
 import re
 import sqlite3
 

@@ -1,3 +1,5 @@
+"""Main Flask application"""
+
 import secrets
 import sqlite3
 from flask import (

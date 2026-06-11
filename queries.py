@@ -1,3 +1,5 @@
+"""Database query functions"""
+
 from utils import get_db_connection, validate_runtime
 
 
