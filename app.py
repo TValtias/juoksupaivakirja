@@ -25,7 +25,7 @@ app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
-    """ Show's the applications main page"""
+    """Show's the applications main page"""
     return render_template("base.html")
 
 @app.route("/register", methods=["GET", "POST"])
