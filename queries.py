@@ -4,7 +4,7 @@ from utils import get_db_connection, validate_runtime
 
 
 def validate_positive_int(value, name):
-    """Checks if the input value is a positive number 
+    """Checks if the input value is a positive number
     and raises a valueerror if not"""
     try:
         value = int(value)
@@ -215,7 +215,7 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, com
     terrain_id = validate_positive_int(terrain_id, "Terrain ID")
     run_type_id = validate_positive_int(run_type_id, "Run type ID")
     competition_id = (
-        validate_positive_int(competition_id, "competition ID") 
+        validate_positive_int(competition_id, "competition ID")
         if competition_id else None
     )
 
