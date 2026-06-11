@@ -310,7 +310,7 @@ def get_competition(competition_id):
         ).fetchone()
 
 def get_top_results(competition_id):
-    "Searches the top 10 running performances for the race"
+    """Searches the top 10 running performances for the race"""
     competition_id = validate_positive_int(
         competition_id,
         "Competition ID"
