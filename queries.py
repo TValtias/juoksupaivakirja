@@ -251,9 +251,9 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         search_conditions.append(km_int)
 
     if terrain:
-            terrain_ids = [validate_positive_int(t, "Terrain ID") for t in terrain]
-            search += f" AND entries.terrain_id IN ({','.join(['?']*len(terrain_ids))})"
-            search_conditions.extend(terrain_ids)
+        terrain_ids = [validate_positive_int(t, "Terrain ID") for t in terrain]
+        search += f" AND entries.terrain_id IN ({','.join(['?']*len(terrain_ids))})"
+        search_conditions.extend(terrain_ids)
 
     if run_type:
         run_type = validate_positive_int(run_type, "Run type ID")
