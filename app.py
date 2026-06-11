@@ -21,7 +21,7 @@ from queries import (
 )
 
 app = Flask(__name__)
-app.secret_key = config.secret_key
+app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
