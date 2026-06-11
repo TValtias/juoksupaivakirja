@@ -2,12 +2,19 @@ import re
 import sqlite3
 
 def get_db_connection():
+    """Creates and returns connection to SQLite-database
+    Allows query results to be accessed by column names"""
     connecting = sqlite3.connect("database.db")
 
     connecting.row_factory = sqlite3.Row
     return connecting
 
 def strong_password(password):
+    """Ensures the chosen password meets the safety requirements
+    Password has to be at least 8 characters long, 
+    include a number and at least one special character
+    Returns True or False
+    """
     if len(password) < 8:
         return False
     if not re.search(r"\d", password):
@@ -18,6 +25,10 @@ def strong_password(password):
     return True
 
 def validate_entry_form(km_str, m_str, runtime, terrain_id, run_type_id):
+    """Validates user's input on diary entry forms
+    Runlength has to be a positive number,
+    checks if all necessary fields are filled
+    """
     errors = []
 
     km = None
@@ -49,6 +60,8 @@ def validate_entry_form(km_str, m_str, runtime, terrain_id, run_type_id):
     return errors, km, m
 
 def validate_runtime(value):
+    """Ensures that the user input to runtime is in form
+    (hh:mm:ss)"""
     if not isinstance(value, str):
         raise ValueError("Juoksuaika tulee olla hh:mm:ss")
 
