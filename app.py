@@ -117,7 +117,7 @@ def login():
     return render_template("login.html")
 
 def check_csrf():
-    """Checks that form's CSRF-token matches the session token. 
+    """Checks that form's CSRF-token matches the session token.
     Error 403 if it does not match."""
     token = request.form.get("csrf_token")
     if not token:
@@ -127,7 +127,7 @@ def check_csrf():
 
 @app.route("/logout")
 def logout():
-    """Logs the person out. 
+    """Logs the person out.
     Clears session and redirects to login page."""
     session.clear()
     return redirect("/login")
@@ -216,7 +216,7 @@ def edit_entry(entry_id):
 
     if entry is None:
         return "Muokattavaa merkintää ei löytynyt", 403
-    
+
     if request.method == "POST":
         check_csrf()
         km_str = request.form.get("km", "").strip()
