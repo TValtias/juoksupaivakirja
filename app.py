@@ -9,7 +9,7 @@ from werkzeug.security import (
     check_password_hash
 )
 import config
-from utils import strong_password, validate_entry_form, validate_runtime
+from utils import strong_password, validate_entry_form
 from queries import (
     already_supported, add_support,
     get_top_results, get_competition, add_comments_competition,

@@ -5,6 +5,8 @@ from utils import get_db_connection, validate_runtime
 
 
 def validate_positive_int(value, name):
+    """Checks if the input value is a positive number 
+    and raises a valueerror if not"""
     try:
         value = int(value)
     except (TypeError, ValueError) as exc:
@@ -14,10 +16,12 @@ def validate_positive_int(value, name):
     return value
 
 def validate_nonempty_str(value, name):
+    """Checks if the field is empty and raises valueerror if it is"""
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{name} ei saa olla tyhjä.")
 
 def get_username(username):
+    """Looks for user's information from the database with username."""
     validate_nonempty_str(username, "Username")
     with get_db_connection() as conn:
         return conn.execute(
@@ -31,6 +35,7 @@ def get_username(username):
         ).fetchone()
 
 def create_user(username, password_hash):
+    """Creates a new user to database with given username and password hash"""
     validate_nonempty_str(username, "Username")
     validate_nonempty_str(password_hash, "Password hash")
     with get_db_connection() as conn:
@@ -41,6 +46,7 @@ def create_user(username, password_hash):
         conn.commit()
 
 def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, other):
+    """Validates and saves a new run to entries-table"""
     user_id = validate_positive_int(user_id, "User ID")
     km = validate_positive_int(km, "Distance_km")
     m = validate_positive_int(m, "Distance_m")
@@ -66,6 +72,7 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, 
         conn.commit()
 
 def get_entries(user_id):
+    """Searches user's entries and displays their info"""
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
         return conn.execute(
@@ -91,6 +98,7 @@ def get_entries(user_id):
         ).fetchall()
 
 def get_entry(entry_id, user_id):
+    """Searches a specific entry of a user"""
     entry_id = validate_positive_int(entry_id, "Entry ID")
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
@@ -114,6 +122,7 @@ def get_entry(entry_id, user_id):
         ).fetchone()
 
 def get_max_distance(user_id):
+    """Calculates the longest run. Returns 0 if no runs"""
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
         row = conn.execute(
@@ -129,6 +138,7 @@ def get_max_distance(user_id):
         return 0
 
 def get_competition_count(user_id):
+    """Calculates the amount of runs that have been stated as competitions"""
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
         row = conn.execute(
@@ -144,6 +154,7 @@ def get_competition_count(user_id):
         return int(row[0]) if row else 0
 
 def get_support_count(user_id):
+    """Calculates the amount of supporters / cheers the user has"""
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
         row = conn.execute(
@@ -157,6 +168,7 @@ def get_support_count(user_id):
         return int(row[0]) if row else 0
 
 def already_supported(supporter_id, supported_id):
+    """Checks if the user supports the username"""
     supporter_id = validate_positive_int(supporter_id, "Supporter ID")
     supported_id = validate_positive_int(supported_id, "Supported ID")
     with get_db_connection() as conn:
@@ -171,6 +183,7 @@ def already_supported(supporter_id, supported_id):
         return row is not None
 
 def add_support(supporter_id, supported_id):
+    """Adds a support to database to username from user"""
     supporter_id = validate_positive_int(supporter_id, "Supporter ID")
     supported_id = validate_positive_int(supported_id, "Supported ID")
     with get_db_connection() as conn:
@@ -184,14 +197,17 @@ def add_support(supporter_id, supported_id):
         conn.commit()
 
 def get_terrains():
+    """Gets a list of all the terrains available"""
     with get_db_connection() as conn:
         return conn.execute("SELECT id, name FROM terrains").fetchall()
 
 def get_run_types():
+    """Gets a list of all the run types available"""
     with get_db_connection() as conn:
         return conn.execute("SELECT id, name FROM run_types").fetchall()
 
 def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, competition_id, other):
+    """Updates an existing entry with user's new input after validation"""
     entry_id = validate_positive_int(entry_id, "Entry ID")
     user_id = validate_positive_int(user_id, "User ID")
     km = validate_positive_int(km, "Distance_km")
@@ -222,6 +238,7 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, com
         conn.commit()
 
 def delete_entry(entry_id, user_id):
+    """Deletes an entry form database using ID"""
     entry_id = validate_positive_int(entry_id, "Entry ID")
     user_id = validate_positive_int(user_id, "User ID")
     with get_db_connection() as conn:
@@ -232,6 +249,7 @@ def delete_entry(entry_id, user_id):
         conn.commit()
 
 def search_runs(km=None, terrain=None, run_type=None, username=None):
+    """Searches runs using filters"""
     search = """
         SELECT entries.*, users.username,
             t.name AS terrain,
@@ -271,6 +289,7 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         return conn.execute(search, search_conditions).fetchall()
 
 def get_competitions():
+    """Searches competitions in id-order"""
     with get_db_connection() as conn:
         return conn.execute(
             """
@@ -281,6 +300,7 @@ def get_competitions():
         ).fetchall()
 
 def get_competition(competition_id):
+    """Searches a competition's details, like descriptions and banners"""
     competition_id = validate_positive_int(competition_id, "Competition ID")
     with get_db_connection() as conn:
         return conn.execute(
@@ -293,6 +313,7 @@ def get_competition(competition_id):
         ).fetchone()
 
 def get_top_results(competition_id):
+    "Searches the top 10 running performances for the race"
     competition_id = validate_positive_int(
         competition_id,
         "Competition ID"
@@ -311,6 +332,7 @@ def get_top_results(competition_id):
         ).fetchall()
 
 def add_comments_competition(competition_id, user_id, comment):
+    """Saves user's comment to a competition's page"""
     competition_id = validate_positive_int(competition_id, "Competition ID")
     user_id = validate_positive_int(user_id, "User ID")
     validate_nonempty_str(comment, "Comment")
@@ -326,6 +348,7 @@ def add_comments_competition(competition_id, user_id, comment):
         conn.commit()
 
 def get_comments_competition(competition_id):
+    """Searches the 15 latest user comments for the competition"""
     competition_id = validate_positive_int(competition_id, "Competition ID")
     with get_db_connection() as conn:
         return conn.execute(
