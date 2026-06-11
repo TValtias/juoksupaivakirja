@@ -212,7 +212,10 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, com
     validate_runtime(runtime)
     terrain_id = validate_positive_int(terrain_id, "Terrain ID")
     run_type_id = validate_positive_int(run_type_id, "Run type ID")
-    competition_id = validate_positive_int(competition_id, "competition ID") if competition_id else None
+    competition_id = (
+        validate_positive_int(competition_id, "competition ID") 
+        if competition_id else None
+    )
 
     other = other.strip() if other else None
 
