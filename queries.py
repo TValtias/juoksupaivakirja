@@ -314,6 +314,18 @@ def get_competition(competition_id):
             """,
             (competition_id, )
         ).fetchone()
+    
+def get_competition_name(name):
+    """Searches competition by name"""
+    with get_db_connection() as conn:
+        return conn.execute(
+            """
+            SELECT id, name
+            FROM competitions
+            WHERE LOWER(name) = LOWER(?)
+            """,
+            (name,)
+        ).fetchone()
 
 def get_top_results(competition_id):
     """Searches the top 10 running performances for the race"""
