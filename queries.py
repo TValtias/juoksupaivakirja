@@ -53,7 +53,12 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, 
     terrain_id = validate_positive_int(terrain_id, "Terrain ID")
     run_type_id = validate_positive_int(run_type_id, "Run type ID")
 
-    competition_id = int(competition_id) if competition_id else None
+    competition_name = competition_name.strip() if competition_name else None
+    competition_id = None
+    if competition_name:
+        competition = get_competition_by_name(competition_name)
+        if competition:
+            competition_id = competition["id"]
     other = other.strip() if other else None
 
     with get_db_connection() as conn:
