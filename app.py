@@ -19,7 +19,7 @@ from queries import (
     get_entries, get_entry, get_max_distance,
     get_competition_count, get_support_count, search_runs,
     update_entry, delete_entry, get_competitions,
-    get_comments_competition, get_terrains, get_run_types
+    get_comments_competition, get_terrains, get_run_types, get_competition_name
 )
 
 app = Flask(__name__)
@@ -172,11 +172,14 @@ def add_entry_route():
         runtime = request.form.get("runtime", "").strip()
         terrain_id = request.form.get("terrain_id")
         run_type_id = request.form.get("run_type_id")
-        competition_id = request.form.get("competition_id", "").strip()
+        competition_name = request.form.get(
+            "competition_name", ""
+        ).strip()
+            
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
-            km_str, m_str, runtime, terrain_id, run_type_id
+            km_str, m_str, runtime, terrain_id, run_type_id, competition_name
         )
 
         if errors:
@@ -191,12 +194,13 @@ def add_entry_route():
                 run_type=run_type_id,
                 other=other,
                 terrains_selected=[]
+                competition_name=competition_name
             )
 
         add_entry(
             session["user_id"], km, m,
             runtime, terrain_id, run_type_id,
-            competition_id if competition_id else None, other
+            competition_name, other
         )
         return redirect("/personal_diary")
     return render_template(
@@ -215,6 +219,7 @@ def edit_entry(entry_id):
     entry = get_entry(entry_id, session["user_id"])
     terrains = get_terrains()
     run_types = get_run_types()
+    competition_name = get_competion_name()
 
     if entry is None:
         return "Muokattavaa merkintää ei löytynyt", 403
@@ -226,11 +231,13 @@ def edit_entry(entry_id):
         runtime = request.form.get("runtime", "").strip()
         terrain_id = request.form.get("terrain_id")
         run_type_id = request.form.get("run_type_id")
-        competition_id = request.form.get("competition_id")
+        competition_name = request.form.get(
+            "competition_name", ""
+        ).strip()
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
-            km_str, m_str, runtime, terrain_id, run_type_id
+            km_str, m_str, runtime, terrain_id, run_type_id, competition_name
         )
 
         if errors:
@@ -246,6 +253,7 @@ def edit_entry(entry_id):
                 run_type=run_type_id,
                 other=other,
                 terrains_selected=[]
+                competition_name=competition_name
             )
 
         update_entry(
@@ -256,7 +264,7 @@ def edit_entry(entry_id):
             runtime,
             terrain_id,
             run_type_id,
-            competition_id if competition_id else None,
+            competition_name,
             other
         )
         return redirect("/personal_diary")
