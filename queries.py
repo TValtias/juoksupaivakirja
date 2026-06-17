@@ -72,7 +72,7 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_name
             )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (user_id, km, m, runtime, terrain_id, run_type_id, competition_id, other)
+            (user_id, km, m, runtime, terrain_id, run_type_id, competition_name, other)
         )
         conn.commit()
 
