@@ -25,9 +25,10 @@
     </div>
 
     <main class="paivakirja-main">
-
-        {%if error %}
-            <p class="error">{{ error }}</p>
+        {%if errors %}
+        <ul class="error-list">
+            {% for error in errors %}
+            <li>{{ error }}</li>
         {% endif %}
 
         <a href="{{ url_for('add_entry_route') }}" class="button-link">Lisää uusi merkintä</a>

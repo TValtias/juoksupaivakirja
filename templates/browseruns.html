@@ -33,8 +33,11 @@
 
     <main>
 
-        {%if error %}
-            <p class="error">{{ error }}</p>
+        {%if errors %}
+        <ul class="error-list">
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
         {% endif %}
         <form method="GET" action="{{ url_for('browse_runs')}}" class="search-group">
             <div class="rows">
