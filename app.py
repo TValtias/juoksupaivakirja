@@ -179,7 +179,7 @@ def add_entry_route():
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
-            km_str, m_str, runtime, terrain_id, run_type_id, competition_name
+            km_str, m_str, runtime, terrain_id, run_type_id
         )
 
         if errors:
@@ -236,7 +236,7 @@ def edit_entry(entry_id):
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
-            km_str, m_str, runtime, terrain_id, run_type_id, competition_name
+            km_str, m_str, runtime, terrain_id, run_type_id
         )
 
         if errors:
