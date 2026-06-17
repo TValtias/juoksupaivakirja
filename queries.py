@@ -70,9 +70,9 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_name
                 run_type_id, competition_id, 
                 competition_name, other
             )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (user_id, km, m, runtime, terrain_id, run_type_id, competition_name, other)
+            (user_id, km, m, runtime, terrain_id, run_type_id, competition_id, competition_name, other)
         )
         conn.commit()
 
@@ -212,7 +212,7 @@ def get_run_types():
     with get_db_connection() as conn:
         return conn.execute("SELECT id, name FROM run_types").fetchall()
 
-def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, competition_id, other):
+def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, competition_name, other):
     """Updates an existing entry with user's new input after validation"""
     entry_id = validate_positive_int(entry_id, "Entry ID")
     user_id = validate_positive_int(user_id, "User ID")
@@ -238,7 +238,7 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, com
                 runtime = ?,
                 terrain_id = ?,
                 run_type_id = ?,
-                competition_id = ?,
+                competition_name = ?,
                 other = ?
             WHERE id = ? AND user_id = ?
             """,
