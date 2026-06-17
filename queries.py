@@ -267,7 +267,7 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
     search = """
         SELECT entries.*, users.username,
             t.name AS terrain,
-            r.name AS run_type
+            r.name AS run_type,
             e.competition_name
         FROM entries
         JOIN users ON entries.user_id = users.id
