@@ -219,7 +219,6 @@ def edit_entry(entry_id):
     entry = get_entry(entry_id, session["user_id"])
     terrains = get_terrains()
     run_types = get_run_types()
-    competition_name = get_competion_name()
 
     if entry is None:
         return "Muokattavaa merkintää ei löytynyt", 403
