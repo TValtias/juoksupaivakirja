@@ -13,6 +13,7 @@ CREATE TABLE entries (
     terrain_id INTEGER NOT NULL,
     run_type_id INTEGER NOT NULL,
     competition_id INTEGER,
+    competition_name TEXT,
     other TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
