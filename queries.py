@@ -111,6 +111,7 @@ def get_entry(entry_id, user_id):
                 e.terrain_id,
                 e.run_type_id,
                 c.name AS race_name,
+                e.competition_id,
                 e.other,
                 e.created_at
             FROM entries e
