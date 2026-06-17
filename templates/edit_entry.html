@@ -54,7 +54,7 @@
             <div class="radio-group">
                 {% for t in terrains %}
                 <label>
-                    <input type="radio" name="terrain_id" value="{{ t["id"]}}"
+                    <input type="radio" name="terrain_id" value="{{ t['id']}}"
                     {% if entry['terrain_id'] == t['id'] %} checked {% endif %}>
                     {{ t["name"] }}
                 </label>
@@ -64,7 +64,7 @@
             <div class="radio-group">
                 {% for r in run_types %}
                 <label>
-                    <input type="radio" name="run_type" value="{{ r['name']}}"
+                    <input type="radio" name="run_type" value="{{ r['id']}}"
                     {% if entry['run_type_id'] == r['id'] %} checked {% endif %}>
                     {{ r["name"] }}
                 </label>
