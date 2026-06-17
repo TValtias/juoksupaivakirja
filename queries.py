@@ -118,6 +118,7 @@ def get_entry(entry_id, user_id):
                 e.run_type_id,
                 c.name AS race_name,
                 e.competition_id,
+                e.competition_name,
                 e.other,
                 e.created_at
             FROM entries e
@@ -267,6 +268,7 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         SELECT entries.*, users.username,
             t.name AS terrain,
             r.name AS run_type
+            e.competition_name
         FROM entries
         JOIN users ON entries.user_id = users.id
         LEFT JOIN terrains t ON entries.terrain_id = t.id
