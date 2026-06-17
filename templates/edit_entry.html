@@ -64,7 +64,7 @@
             <div class="radio-group">
                 {% for r in run_types %}
                 <label>
-                    <input type="radio" name="run_type" value="{{ r['id']}}"
+                    <input type="radio" name="run_type_id" value="{{ r['id']}}"
                     {% if entry['run_type_id'] == r['id'] %} checked {% endif %}>
                     {{ r["name"] }}
                 </label>
