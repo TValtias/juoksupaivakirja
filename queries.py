@@ -44,7 +44,7 @@ def create_user(username, password_hash):
         )
         conn.commit()
 
-def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, other):
+def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_name, other):
     """Validates and saves a new run to entries-table"""
     user_id = validate_positive_int(user_id, "User ID")
     km = validate_positive_int(km, "Distance_km")
@@ -56,7 +56,7 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_id, 
     competition_name = competition_name.strip() if competition_name else None
     competition_id = None
     if competition_name:
-        competition = get_competition_by_name(competition_name)
+        competition = get_competition_name(competition_name)
         if competition:
             competition_id = competition["id"]
     other = other.strip() if other else None
