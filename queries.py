@@ -67,7 +67,8 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_name
             INSERT INTO entries (
                 user_id, distance_km,
                 distance_m, runtime, terrain_id,
-                run_type_id, competition_id, other
+                run_type_id, competition_id, 
+                competition_name, other
             )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
