@@ -221,10 +221,12 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, com
     validate_runtime(runtime)
     terrain_id = validate_positive_int(terrain_id, "Terrain ID")
     run_type_id = validate_positive_int(run_type_id, "Run type ID")
-    competition_id = (
-        validate_positive_int(competition_id, "competition ID")
-        if competition_id else None
-    )
+    competition_name = competition_name.strip() if competition_name else None
+
+    if competition_name:
+        competition = get_competition_name(competition_name)
+        if competition:
+            competition_id = competition["id"]
 
     other = other.strip() if other else None
 
@@ -238,11 +240,12 @@ def update_entry(entry_id, user_id, km, m, runtime, terrain_id, run_type_id, com
                 runtime = ?,
                 terrain_id = ?,
                 run_type_id = ?,
+                competition_id = ?,
                 competition_name = ?,
                 other = ?
             WHERE id = ? AND user_id = ?
             """,
-            (km, m, runtime, terrain_id, run_type_id, competition_id, other, entry_id, user_id)
+            (km, m, runtime, terrain_id, run_type_id, competition_id,competition_name, other, entry_id, user_id)
         )
         conn.commit()
 
