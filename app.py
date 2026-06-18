@@ -19,7 +19,7 @@ from queries import (
     get_entries, get_entry, get_max_distance,
     get_competition_count, get_support_count, search_runs,
     update_entry, delete_entry, get_competitions,
-    get_comments_competition, get_terrains, get_run_types, get_competition_name
+    get_comments_competition, get_terrains, get_run_types
 )
 
 app = Flask(__name__)
