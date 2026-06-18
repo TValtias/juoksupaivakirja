@@ -60,8 +60,8 @@
             <div class="checkbox-group">
                 {% for t in terrains %}
                 <label>
-                    <input type="radio" name="terrain_id" value="{{ t['id']}}"
-                    {% if terrains_selected and terrains_selected == t['id'] %} checked {% endif %}>
+                    <input type="checkbox" name="terrain_id" value="{{ t['id']}}"
+                    {% if t['id'] in terrains_selected %}checked{% endif %}>
                     {{ t["name"] }}
                 </label>
                 {% endfor %}
@@ -71,7 +71,7 @@
                 {% for r in run_types %}
                 <label>
                     <input type="radio" name="run_type_id" value="{{ r['id']}}"
-                    {% if run_type == r["id"] %} checked {% endif %}>
+                    {% if run_type_selected == r['id'] %}checked{% endif %}>
                     {{ r["name"] }}
                 </label>
                 {% endfor %}
