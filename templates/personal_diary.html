@@ -29,6 +29,8 @@
         <ul class="error-list">
             {% for error in errors %}
             <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
         {% endif %}
 
         <a href="{{ url_for('add_entry_route') }}" class="button-link">Lisää uusi merkintä</a>
