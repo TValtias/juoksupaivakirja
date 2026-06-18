@@ -89,7 +89,7 @@ def get_entries(user_id):
                 e.runtime,
                 t.name AS terrain,
                 r.name AS run_type,
-                c.name AS race_name,
+                COALESCE(c.name, e.competition_name) AS race_name,
                 e.other,
                 e.created_at
             FROM entries e
@@ -116,7 +116,7 @@ def get_entry(entry_id, user_id):
                 e.runtime,
                 e.terrain_id,
                 e.run_type_id,
-                c.name AS race_name,
+                COALESCE(c.name, e.competition_name) AS race_name,
                 e.competition_id,
                 e.competition_name,
                 e.other,
