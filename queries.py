@@ -261,7 +261,7 @@ def delete_entry(entry_id, user_id):
         )
         conn.commit()
 
-def search_runs(km=None, terrain=None, run_type=None, username=None):
+def search_runs(km=None, terrain=None, run_type=None, username=None, competition_name=None):
     """Searches runs using filters"""
     search = """
         SELECT entries.*, users.username,
@@ -297,21 +297,23 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         search += " AND users.username LIKE ?"
         search_conditions.append(f"%{username.strip()}%")
 
-    if get_competition_name:
+    if competition_name:
         competition_name = competition_name.strip()
-        search += """
-            AND (
-                LOWER(c.name) LIKE LOWER(?)
-                OR LOWER(entries.competition_name) LIKE LOWER (?)
-            )
-        """
-        like_value = f"%{competition_name}%"
-        search_conditions.extend([like_value, like_value])
+        if competition_name:
+            search += """
+                AND (
+                    LOWER(c.name) LIKE LOWER(?)
+                    OR LOWER(entries.competition_name) LIKE LOWER (?)
+                )
+            """
+            like_value = f"%{competition_name}%"
+            search_conditions.extend([like_value, like_value])
 
     search += " ORDER BY entries.created_at DESC"
 
     with get_db_connection() as conn:
         return conn.execute(search, search_conditions).fetchall()
+
 
 def get_competitions():
     """Searches competitions in id-order"""
