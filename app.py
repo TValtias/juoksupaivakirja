@@ -294,12 +294,14 @@ def browse_runs():
     terrain_id = request.args.getlist("terrain_id")
     run_type_id = request.args.get("run_type_id")
     username = request.args.get("username")
+    competition_name = request.args.get("competition_name")
 
     runs = search_runs(
         km=km,
         terrain=terrain_id,
         run_type=run_type_id,
-        username=username
+        username=username,
+        competition_name=competition_name
     )
 
     return render_template(
