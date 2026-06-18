@@ -67,7 +67,7 @@ def add_entry(user_id, km, m, runtime, terrain_id, run_type_id, competition_name
             INSERT INTO entries (
                 user_id, distance_km,
                 distance_m, runtime, terrain_id,
-                run_type_id, competition_id, 
+                run_type_id, competition_id,
                 competition_name, other
             )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -338,7 +338,7 @@ def get_competition(competition_id):
             """,
             (competition_id, )
         ).fetchone()
-    
+
 def get_competition_name(name):
     """Searches competition by name"""
     with get_db_connection() as conn:

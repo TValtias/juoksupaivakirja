@@ -175,7 +175,7 @@ def add_entry_route():
         competition_name = request.form.get(
             "competition_name", ""
         ).strip()
-            
+
         other = request.form.get("other", "").strip()
 
         errors, km, m = validate_entry_form(
