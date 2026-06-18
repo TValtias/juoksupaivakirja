@@ -154,7 +154,6 @@ def get_competition_count(user_id):
             FROM entries
             WHERE user_id = ?
             AND competition_id IS NOT NULL
-            AND TRIM(competition_id) != ''
             """,
             (user_id,)
         ).fetchone()
