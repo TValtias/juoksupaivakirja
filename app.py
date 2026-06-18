@@ -193,7 +193,7 @@ def add_entry_route():
                 runtime=runtime,
                 run_type=run_type_id,
                 other=other,
-                terrains_selected=[]
+                terrains_selected=[],
                 competition_name=competition_name
             )
 
@@ -251,7 +251,7 @@ def edit_entry(entry_id):
                 runtime=runtime,
                 run_type=run_type_id,
                 other=other,
-                terrains_selected=[]
+                terrains_selected=[],
                 competition_name=competition_name
             )
 
