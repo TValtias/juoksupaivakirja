@@ -297,6 +297,17 @@ def search_runs(km=None, terrain=None, run_type=None, username=None):
         search += " AND users.username LIKE ?"
         search_conditions.append(f"%{username.strip()}%")
 
+    if get_competition_name:
+        competition_name = competition_name.strip()
+        search += """
+            AND (
+                LOWER(c.name) LIKE LOWER(?)
+                OR LOWER(entries.competition_name) LIKE LOWER (?)
+            )
+        """
+        like_value = f"%{competition_name}%"
+        search_conditions.extend([like_value, like_value])
+
     search += " ORDER BY entries.created_at DESC"
 
     with get_db_connection() as conn:
