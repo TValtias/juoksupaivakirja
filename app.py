@@ -193,8 +193,8 @@ def add_entry_route():
                 runtime=runtime,
                 run_type=run_type_id,
                 other=other,
-                terrains_selected=[int(t) for t in terrains_selected]
-                run_type_selected=int(run_type_id) if run_type_id else None
+                terrains_selected=[int(t) for t in terrains_selected],
+                run_type_selected=int(run_type_id) if run_type_id else None,
                 competition_name=competition_name
             )
 
