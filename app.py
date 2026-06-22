@@ -193,7 +193,7 @@ def add_entry_route():
                 runtime=runtime,
                 run_type=run_type_id,
                 other=other,
-                terrains_selected=[int(t) for t in terrains_selected],
+                terrain_selected=int(terrain_id) if terrain_id else None,
                 run_type_selected=int(run_type_id) if run_type_id else None,
                 competition_name=competition_name
             )
@@ -208,6 +208,8 @@ def add_entry_route():
         "add_entry.html",
         terrains=terrains,
         run_types=run_types
+        terrain_selected=entry["terrain_id"],
+        run_type_selected=entry["run_type_id"]
     )
 
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
@@ -252,7 +254,8 @@ def edit_entry(entry_id):
                 runtime=runtime,
                 run_type=run_type_id,
                 other=other,
-                terrains_selected=[],
+                terrain_selected=int(terrain_id) if terrain_id else None,
+                run_type_selected=int(run_type_id) if run_type_id else None,
                 competition_name=competition_name
             )
 
@@ -273,7 +276,9 @@ def edit_entry(entry_id):
         "edit_entry.html",
         entry=entry,
         terrains=terrains,
-        run_types=run_types
+        run_types=run_types,
+        terrain_selected=entry["terrain_id"],
+        run_type_selected=entry["run_type_id"]
     )
 
 @app.route("/delete_entry/<int:entry_id>", methods=["POST"])
