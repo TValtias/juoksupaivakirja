@@ -57,7 +57,7 @@
             <input type="text" name="runtime" placeholder="esim 00:25:30" value="{{ runtime or '' }}" required>
             
             <label>Maasto*:</label>
-            <div class="checkbox-group">
+            <div class="radio-group">
                 {% for t in terrains %}
                 <label>
                     <input type="radio" name="terrain_id" value="{{ t['id']}}"
