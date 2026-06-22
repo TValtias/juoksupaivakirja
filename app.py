@@ -208,8 +208,8 @@ def add_entry_route():
         "add_entry.html",
         terrains=terrains,
         run_types=run_types,
-        terrain_selected=entry["terrain_id"],
-        run_type_selected=entry["run_type_id"]
+        terrain_selected=None,
+        run_type_selected=None
     )
 
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
