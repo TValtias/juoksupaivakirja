@@ -58,7 +58,7 @@
             <div class="radio-group">
                 {% for t in terrains %}
                 <label>
-                    <input type="checkbox" name="terrain_id" value="{{ t['id']}}"
+                    <input type="radio" name="terrain_id" value="{{ t['id']}}"
                         {% if t['id'] in terrains_selected %}checked{% endif %}>
                     {{ t["name"] }}
                 </label>
