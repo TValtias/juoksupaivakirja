@@ -207,7 +207,7 @@ def add_entry_route():
     return render_template(
         "add_entry.html",
         terrains=terrains,
-        run_types=run_types
+        run_types=run_types,
         terrain_selected=entry["terrain_id"],
         run_type_selected=entry["run_type_id"]
     )
