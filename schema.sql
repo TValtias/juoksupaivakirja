@@ -68,7 +68,8 @@ INSERT INTO run_types (name) VALUES
 ('kevyt'),
 ('tavoitteellinen'),
 ('kilpailuun tähtäävä'),
-('kisat');
+('kisat')
+ON CONFLICT(name) DO NOTHING;
 
 
 CREATE TABLE IF NOT EXISTS terrains (
@@ -81,4 +82,5 @@ INSERT INTO terrains (name) VALUES
 ('katu'),
 ('rata'),
 ('hiekka'),
-('metsä/epätasainen');
+('metsä/epätasainen')
+ON CONFLICT(name) DO NOTHING;
