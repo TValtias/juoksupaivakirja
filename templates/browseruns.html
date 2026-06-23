@@ -68,7 +68,7 @@
                     <input type="checkbox" 
                             name="terrain_id" 
                             value="{{ t['id'] }}"
-                            {{ if terrain_selected and (t['id'] in terrain_selected) %}checked{% endif %}>
+                            {{% if terrain_selected and (t['id'] in terrain_selected) %}checked{% endif %}>
                     {{ t['name'] }}
                 </label>
                 {% endfor %}
