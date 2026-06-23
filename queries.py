@@ -269,60 +269,6 @@ def delete_entry(entry_id, user_id):
         )
         conn.commit()
 
-def search_runs(km=None, terrain=None, run_type=None,
-                username=None, competition_name=None):
-    """Searches runs using filters"""
-    search = """
-        SELECT entries.*, users.username,
-            t.name AS terrain,
-            r.name AS run_type,
-            COALESCE(c.name, entries.competition_name) AS race_name
-        FROM entries
-        JOIN users ON entries.user_id = users.id
-        LEFT JOIN terrains t ON entries.terrain_id = t.id
-        LEFT JOIN run_types r ON entries.run_type_id = r.id
-        LEFT JOIN competitions c ON entries.competition_id = c.id
-        WHERE 1=1
-    """
-    search_conditions = []
-
-    if km is not None and km != "":
-        km_int = validate_positive_int(km, "Distance_km")
-        search += " AND entries.distance_km = ?"
-        search_conditions.append(km_int)
-
-    if terrain:
-        terrain_ids = [validate_positive_int(t, "Terrain ID") for t in terrain]
-        search += f" AND entries.terrain_id IN ({','.join(['?']*len(terrain_ids))})"
-        search_conditions.extend(terrain_ids)
-
-    if run_type:
-        run_type = validate_positive_int(run_type, "Run type ID")
-        search += " AND entries.run_type_id = ?"
-        search_conditions.append(run_type)
-
-    if username:
-        validate_nonempty_str(username, "Username")
-        search += " AND users.username LIKE ?"
-        search_conditions.append(f"%{username.strip()}%")
-
-    if competition_name:
-        competition_name = competition_name.strip()
-        if competition_name:
-            search += """
-                AND (
-                    LOWER(c.name) LIKE LOWER(?)
-                    OR LOWER(entries.competition_name) LIKE LOWER (?)
-                )
-            """
-            like_value = f"%{competition_name}%"
-            search_conditions.extend([like_value, like_value])
-
-    search += " ORDER BY entries.created_at DESC"
-
-    with get_db_connection() as conn:
-        return conn.execute(search, search_conditions).fetchall()
-
 def search_runs_paginated(km=None, terrain=None, run_type=None,
                           username=None, competition_name=None,
                           page=1, page_size=20):
