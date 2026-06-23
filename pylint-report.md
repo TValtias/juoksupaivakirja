@@ -80,7 +80,7 @@ def update_entry(entry_id, user_id, km, m,
                  competition_name, other):
 ```
 sekä
-```
+```python
 def search_runs_paginated(km=None, terrain=None, run_type=None,
                           username=None, competition_name=None,
                           page=1, page_size=20):
