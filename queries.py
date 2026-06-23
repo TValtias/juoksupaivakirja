@@ -1,5 +1,5 @@
 """Database query functions"""
-
+import math
 from utils import get_db_connection, validate_runtime
 
 
@@ -322,6 +322,93 @@ def search_runs(km=None, terrain=None, run_type=None,
 
     with get_db_connection() as conn:
         return conn.execute(search, search_conditions).fetchall()
+
+def search_runs_paginated(km=None, terrain=None, run_type=None,
+                          username=None, competition_name=None,
+                          page=1, page_size=20):
+    """Searches runs using filters with pagination.
+    Returns (rows, total_count, page_count).
+    """
+    base_sql = """
+        FROM entries
+        JOIN users ON entries.user_id = users.id
+        LEFT JOIN terrains t ON entries.terrain_id = t.id
+        LEFT JOIN run_types r ON entries.run_type_id = r.id
+        LEFT JOIN competitions c ON entries.competition_id = c.id
+        WHERE 1=1
+    """
+    conditions = []
+    params = []
+
+    if km is not None and km != "":
+        km_int = validate_positive_int(km, "Distance_km")
+        conditions.append("entries.distance_km = ?")
+        params.append(km_int)
+
+    if terrain:
+        terrain_ids = [validate_positive_int(t, "Terrain ID") for t in terrain]
+        placeholders = ",".join(["?"] * len(terrain_ids))
+        conditions.append(f"entries.terrain_id IN ({placeholders})")
+        params.extend(terrain_ids)
+
+    if run_type:
+        run_type_int = validate_positive_int(run_type, "Run type ID")
+        conditions.append("entries.run_type_id = ?")
+        params.append(run_type_int)
+
+    if username:
+        validate_nonempty_str(username, "Username")
+        conditions.append("users.username LIKE ?")
+        params.append(f"%{username.strip()}%")
+
+    if competition_name:
+        comp = competition_name.strip()
+        if comp:
+            conditions.append(
+                """
+                (
+                    LOWER(c.name) LIKE LOWER(?)
+                    OR LOWER(entries.competition_name) LIKE LOWER(?)
+                )
+                """
+            )
+            like_value = f"%{comp}%"
+            params.extend([like_value, like_value])
+
+    where_clause = ""
+    if conditions:
+        where_clause = " AND " + " AND ".join(conditions)
+
+    count_sql = "SELECT COUNT(*) " + base_sql + where_clause
+
+    with get_db_connection() as conn:
+        total_row = conn.execute(count_sql, params).fetchone()
+        total_count = int(total_row[0]) if total_row else 0
+
+        page = max(page, 1)
+        page_size = max(page_size, 1)
+        page_count = max(math.ceil(total_count / page_size), 1)
+
+        if page > page_count:
+            page = page_count
+
+        limit = page_size
+        offset = page_size * (page - 1)
+
+        data_sql = """
+            SELECT entries.*, users.username,
+                t.name AS terrain,
+                r.name AS run_type,
+                COALESCE(c.name, entries.competition_name) AS race_name
+        """ + base_sql + where_clause + """
+            ORDER BY entries.created_at DESC
+            LIMIT ? OFFSET ?
+        """
+
+        data_params = params + [limit, offset]
+        rows = conn.execute(data_sql, data_params).fetchall()
+
+    return rows, total_count, page_count
 
 
 def get_competitions():
