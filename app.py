@@ -1,10 +1,9 @@
 """Main Flask application"""
-
 import secrets
 import sqlite3
 from flask import (
     Flask, redirect, render_template,
-    request, session, url_for, abort
+    request, session, url_for, abort, g #for test
 )
 from werkzeug.security import (
     generate_password_hash,
@@ -21,9 +20,21 @@ from queries import (
     update_entry, delete_entry, get_competitions,
     get_comments_competition, get_terrains, get_run_types
 )
-
+import time #for test
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
+
+ 
+@app.before_request #testing
+def before_request():
+    g.start_time = time.time()  # Tallennetaan nykyinen aika ennen pyyntöä
+
+@app.after_request #testing
+def after_request(response):
+    if hasattr(g, "start_time"):  # Varmistamme, että start_time on asetettu
+        elapsed_time = round(time.time() - g.start_time, 2)
+        print("elapsed time:", elapsed_time, "s")  # Tulostetaan kulunut aika
+    return response
 
 @app.route("/")
 def index():
