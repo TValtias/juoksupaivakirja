@@ -118,18 +118,18 @@
                                             km=km,
                                             competition_name=competition_name,
                                             run_type_id=run_type_selected,
-                                            **{'terrain_id': terrain_selected}) }}">&laquo; Edellinen</a>"
+                                            **{'terrain_id': terrain_selected}) }}">&laquo; Edellinen</a>
                     {% endif %}
                     <span>Sivu {{ page }} / {{ page_count }}</span>
 
                     {% if page < page_count %}
-                        <a href=""{{ url_for('browse_runs',
+                        <a href="{{ url_for('browse_runs',
                                             page=page+1,
                                             username=username,
                                             km=km,
                                             competition_name=competition_name,
                                             run_type_id=run_type_selected,
-                                            **{'terrain_id': terrain_selected}) }}">Seuraava &raquo</a>"
+                                            **{'terrain_id': terrain_selected}) }}">Seuraava &raquo</a>
                     {% endif %}
                 </div>
             {% else %}
