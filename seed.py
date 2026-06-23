@@ -4,9 +4,9 @@ from werkzeug.security import generate_password_hash
 
 DB_PATH = "database.db"
 
-USER_COUNT = 1000
-ENTRY_COUNT = 100_000
-COMPETITION_COUNT = 50
+USER_COUNT = 100_000
+ENTRY_COUNT = 1_000_000
+COMPETITION_COUNT = 500
 
 def main():
     conn = sqlite3.connect(DB_PATH)

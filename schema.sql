@@ -1,10 +1,16 @@
-CREATE TABLE users (
+CREATE INDEX IF NOT EXISTS idx_entries_user ON entries (user_id);
+CREATE INDEX IF NOT EXISTS idx_entries_created_at ON entries (created_at);
+CREATE INDEX IF NOT EXISTS idx_entries_terrain ON entries (terrain_id);
+CREATE INDEX IF NOT EXISTS idx_entries_run_type ON entries (run_type_id);
+CREATE INDEX IF NOT EXISTS idx_entries_competition ON entries (competition_id);
+
+CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE,
     password_hash TEXT NOT NULL
 );
 
-CREATE TABLE entries (
+CREATE TABLE IF NOT EXISTS entries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     distance_km INTEGER NOT NULL,
@@ -22,7 +28,7 @@ CREATE TABLE entries (
     FOREIGN KEY (competition_id) REFERENCES competitions(id)
 );
 
-CREATE TABLE supports (
+CREATE TABLE IF NOT EXISTS supports (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     supporter_id INTEGER NOT NULL,
     supported_id INTEGER NOT NULL,
@@ -32,9 +38,9 @@ CREATE TABLE supports (
     UNIQUE (supporter_id, supported_id)
 );
 
-CREATE INDEX idx_user_id ON entries(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_id ON entries(user_id);
 
-CREATE TABLE competitions (
+CREATE TABLE IF NOT EXISTS competitions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
     description TEXT,
@@ -43,7 +49,7 @@ CREATE TABLE competitions (
     map_image TEXT
 );
 
-CREATE TABLE competition_comments (
+CREATE TABLE IF NOT EXISTS competition_comments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     competition_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -53,7 +59,7 @@ CREATE TABLE competition_comments (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE run_types (
+CREATE TABLE IF NOT EXISTS run_types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
 );
@@ -65,7 +71,7 @@ INSERT INTO run_types (name) VALUES
 ('kisat');
 
 
-CREATE TABLE terrains (
+CREATE TABLE IF NOT EXISTS terrains (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
 );
