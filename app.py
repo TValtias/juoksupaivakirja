@@ -1,6 +1,7 @@
 """Main Flask application"""
 import secrets
 import sqlite3
+import time #for test
 from flask import (
     Flask, redirect, render_template,
     request, session, url_for, abort, g #for test
@@ -20,17 +21,19 @@ from queries import (
     update_entry, delete_entry, get_competitions,
     get_comments_competition, get_terrains, get_run_types
 )
-import time #for test
+
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
- 
-@app.before_request #testing
+
+@app.before_request #for performance testing
 def before_request():
+    """Stores request start time for performance measurement"""
     g.start_time = time.time()  # Tallennetaan nykyinen aika ennen pyyntöä
 
-@app.after_request #testing
+@app.after_request #for performancetesting
 def after_request(response):
+    """Logs request duration after each response."""
     if hasattr(g, "start_time"):  # Varmistamme, että start_time on asetettu
         elapsed_time = round(time.time() - g.start_time, 2)
         print("elapsed time:", elapsed_time, "s")  # Tulostetaan kulunut aika
