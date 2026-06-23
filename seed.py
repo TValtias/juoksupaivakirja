@@ -23,7 +23,9 @@ def main():
     run_types = conn.execute("SELECT id FROM run_types").fetchall()
 
     if not terrains or not run_types:
-        raise RuntimeError("Täytä ensin terrains ja run_types -taulut ennen seed.py ajoa")
+        raise RuntimeError(
+            "Täytä ensin terrains ja run_types -taulut ennen seed.py ajoa"
+        )
 
     terrain_ids = [row["id"] for row in terrains]
     run_type_ids = [row["id"] for row in run_types]
@@ -32,13 +34,19 @@ def main():
     for i in range(1, USER_COUNT + 1):
         username = f"user{i}"
         password_hash = generate_password_hash("password")
-        conn.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", (username, password_hash))
+        conn.execute(
+            "INSERT INTO users (username, password_hash) VALUES (?, ?)",
+            (username, password_hash)
+        )
 
     print("Luodaan kilpailuja...")
     for i in range(1, COMPETITION_COUNT + 1):
         name = f"Competition {i}"
         description = f"Kuvaus kilpailulle {i}"
-        conn.execute("INSERT INTO competitions (name, description) VALUES (?, ?)", (name, description))
+        conn.execute(
+            "INSERT INTO competitions (name, description) VALUES (?, ?)",
+            (name, description)
+        )
 
     conn.commit()
 
@@ -50,7 +58,11 @@ def main():
         user_id = random.randint(1, USER_COUNT)
         km = random.randint(0, 42)  # max 42 km
         m = random.randint(0, 999)   # max 999 m
-        runtime = f"{random.randint(0, 5):02d}:{random.randint(0, 59):02d}:{random.randint(0, 59):02d}"
+        runtime = (
+            f"{random.randint(0, 5):02d}:"
+            f"{random.randint(0, 59):02d}:"
+            f"{random.randint(0, 59):02d}"
+        )
         terrain_id = random.choice(terrain_ids)
         run_type_id = random.choice(run_type_ids)
 
@@ -59,8 +71,9 @@ def main():
             comp_name = None  # data comes from competitions table
         else:
             comp_id = None
-            comp_name = f"Local race {random.randint(1, 100)}" if random.random() < 0.1 else None
-
+            comp_name = (
+                f"Local race {random.randint(1, 100)}" if random.random() < 0.1 else None
+            )
         other = f"Test entry {i}"
 
         conn.execute(
