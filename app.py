@@ -17,7 +17,7 @@ from queries import (
     get_top_results, get_competition, add_comments_competition,
     get_username, create_user, add_entry,
     get_entries, get_entry, get_max_distance,
-    get_competition_count, get_support_count, search_runs,
+    get_competition_count, get_support_count, search_runs, search_runs_paginated,
     update_entry, delete_entry, get_competitions,
     get_comments_competition, get_terrains, get_run_types
 )
@@ -295,26 +295,42 @@ def delete_entry_route(entry_id):
 
 @app.route("/browseruns", methods=["GET"])
 def browse_runs():
-    """Allows users to search saved running entries based on search criteria"""
-    km = request.args.get("km")
+    """Allows users to search saved running entries based on search criteria with pagination"""
+    km = request.args.get("km", "")
     terrain_id = request.args.getlist("terrain_id")
-    run_type_id = request.args.get("run_type_id")
-    username = request.args.get("username")
-    competition_name = request.args.get("competition_name")
+    run_type_id = request.args.get("run_type_id", "")
+    username = request.args.get("username", "")
+    competition_name = request.args.get("competition_name", "")
+    page_str = request.args.get("page", "1")
 
-    runs = search_runs(
+    try:
+        page = int(page_str)
+    except ValueError:
+        page = 1
+
+    runs, total_count, page_count = search_runs_paginated(
         km=km,
         terrain=terrain_id,
         run_type=run_type_id,
         username=username,
-        competition_name=competition_name
+        competition_name=competition_name,
+        page=page,
+        page_size=20,
     )
 
     return render_template(
         "browseruns.html",
         runs=runs,
         terrains=get_terrains(),
-        run_types=get_run_types()
+        run_types=get_run_types(),
+        page=page,
+        page_count=page_count,
+        total_count=total_count,
+        km=km,
+        terrain_selected=terrain_id,
+        run_type_selected=run_type_id,
+        username=username,
+        competition_name=competition_name,
     )
 
 @app.route("/competition")
