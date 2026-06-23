@@ -43,13 +43,20 @@
         <form method="GET" action="{{ url_for('browse_runs')}}" class="search-group">
             <div class="rows">
                 <label>Käyttäjä:</label>
-                <input type="text" name="username" placeholder="käyttäjänimi">
+                <input type="text" 
+                        name="username" 
+                        placeholder="käyttäjänimi" 
+                        value="{{ username or '' }}">
             </div>
 
             <div class="rows">
                 <label> Juoksun pituus:</label>
                 <div class="inline-inputs">
-                    <input type="number" name="km" placeholder="km" min="0">
+                    <input type="number" 
+                            name="km" 
+                            placeholder="km" 
+                            min="0" 
+                            value=" {{ km or ''}}">
                 </div>
             </div>
 
@@ -58,7 +65,10 @@
                 <div class="checkbox-group">
                 {% for t in terrains %}
                 <label>
-                    <input type="checkbox" name="terrain_id" value="{{ t['id'] }}">
+                    <input type="checkbox" 
+                            name="terrain_id" 
+                            value="{{ t['id'] }}"
+                            {{ if terrain_selected and (t['id'] |string in terrain_selected) %}checked{% endif %}>
                     {{ t['name'] }}
                 </label>
                 {% endfor %}
@@ -70,7 +80,10 @@
                 <div class="radio-group">
                     {% for r in run_types %}
                     <label>
-                        <input type="radio" name="run_type_id" value="{{ r['id'] }}">
+                        <input type="radio" 
+                                name="run_type_id" 
+                                value="{{ r['id'] }}"
+                                {% if run_type_selected and (r['id']|string == run_type_selected) %}checked{% endif %}>
                         {{ r['name'] }}
                     </label>
                     {% endfor %}
@@ -79,7 +92,10 @@
 
             <div class="rows">
                 <label>Kilpailu:</label>
-                <input type="text" name="competition_name" placeholder="">
+                <input type="text" 
+                        name="competition_name" 
+                        placeholder=""
+                        value=""{{ competition_name or ''}}>
                 <div>
                     <button type="submit">Hae</button>
                 </div>
@@ -118,7 +134,8 @@
                                             km=km,
                                             competition_name=competition_name,
                                             run_type_id=run_type_selected,
-                                            **{'terrain_id': terrain_selected}) }}">&laquo; Edellinen</a>
+                                            **{'terrain_id': terrain_selected}
+                                            ) }}">&laquo; Edellinen</a>
                     {% endif %}
                     <span>Sivu {{ page }} / {{ page_count }}</span>
 
@@ -129,7 +146,8 @@
                                             km=km,
                                             competition_name=competition_name,
                                             run_type_id=run_type_selected,
-                                            **{'terrain_id': terrain_selected}) }}">Seuraava &raquo</a>
+                                            **{'terrain_id': terrain_selected}
+                                            ) }}">Seuraava &raquo</a>
                     {% endif %}
                 </div>
             {% else %}
