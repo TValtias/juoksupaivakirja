@@ -17,7 +17,7 @@ from queries import (
     get_top_results, get_competition, add_comments_competition,
     get_username, create_user, add_entry,
     get_entries, get_entry, get_max_distance,
-    get_competition_count, get_support_count, search_runs, search_runs_paginated,
+    get_competition_count, get_support_count, search_runs_paginated,
     update_entry, delete_entry, get_competitions,
     get_comments_competition, get_terrains, get_run_types
 )
