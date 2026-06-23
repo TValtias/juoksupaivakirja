@@ -11,6 +11,7 @@
 - Käyttäjä pystyy valitsemaan juoksulenkille yhden tai useamman luokittelun (kevyt lenkki, tavoitteellinen juoksu, kilpailuun tähtäävä, kisat) sekä eri maastot. Mahdolliset luokat ovat tietokannassa.
 - Käyttäjä pystyy katsoa kisasivuja ja käydä keskustelua muiden kanssa niistä kommenttialueella. Käyttäjä pystyy katsomaan tilastoja TOP 10 parhaista kisa-ajoista.
 
+---
 
 ## Asennusohjeet
 
@@ -48,3 +49,62 @@
 ```
 
   **HUOM!** Päiväkirjan käyttö (merkintöjen luonti, muokkaus, poisto) vaatii rekisteröinnin. Etusivu, kisat ja selaa toimivat ilman.
+
+---
+
+## Suuren datamäärän testiraportti
+Luotu seed.py, joka luo 
+- 100 000 käyttäjää
+- 1 000 000 päiväkirjamerkintää
+- 500 Uutta kilpailua.
+
+
+Sivutus on tehty sivulle browseruns, jonka kautta haetaan eri käyttäjien tekemiä päiväkirjamerkintöjä. 
+Jokainen haku tuottaa 20 tulosta, joita voi selata painikkeilla "Seuraava" ja "Edellinen".
+
+Jo luomisvaiheessa tehty päätös rajoittaa jokaisen kilpailun kommenttikenttä 15 viimeisimpään viestiin sai minut muuttamaan testauksen viesteistä kilpailujen määrään.
+
+Jätän pois kuvien lataamiseen kuluneen ajan, ellei se ole dramaattisesti pidempi.
+```
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:12:00] "GET / HTTP/1.1" 200 -
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:13:43] "GET /register HTTP/1.1" 200 -
+elapsed time: 0.0 s
+127.0.0.1 - - [23/Jun/2026 17:14:20] "GET /login HTTP/1.1" 200 -
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:14:44] "GET /personal_diary HTTP/1.1" 200 -
+elapsed time: 2.13 s
+127.0.0.1 - - [23/Jun/2026 17:15:29] "GET /browseruns HTTP/1.1" 200 -
+elapsed time: 1.7 s
+127.0.0.1 - - [23/Jun/2026 17:16:18] "GET /browseruns?username=alias&km=&competition_name= HTTP/1.1" 200 -
+elapsed time: 0.02 s
+127.0.0.1 - - [23/Jun/2026 17:16:39] "GET /competition HTTP/1.1" 200 -
+elapsed time: 0.02 s
+127.0.0.1 - - [23/Jun/2026 17:17:15] "GET /kayttaja/user82305 HTTP/1.1" 200 -
+```
+Näin suurella tietomäärällä testatessa haku hidastuu, mutta ei ole mahdoton käyttää. 
+
+
+Lisäsin indeksejä, jolloin tulokset ovat seuraavanlaisia:
+```
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:41:27] "GET / HTTP/1.1" 200 -
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:42:14] "GET /register HTTP/1.1" 200 -
+elapsed time: 0.0 s
+127.0.0.1 - - [23/Jun/2026 17:42:33] "GET /login HTTP/1.1" 200 -
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:42:43] "GET /personal_diary HTTP/1.1" 200 -
+elapsed time: 1.21 s
+127.0.0.1 - - [23/Jun/2026 17:43:54] "GET /browseruns HTTP/1.1" 200 -
+elapsed time: 0.95 s
+127.0.0.1 - - [23/Jun/2026 17:44:43] "GET /browseruns?username=user1000&km=&competition_name= HTTP/1.1" 200 -
+elapsed time: 0.02 s
+127.0.0.1 - - [23/Jun/2026 17:45:14] "GET /competition HTTP/1.1" 200 -
+elapsed time: 0.01 s
+127.0.0.1 - - [23/Jun/2026 17:45:36] "GET /kayttaja/user10001 HTTP/1.1" 200 -
+```
+Kuten tuloksista nähdään, indeksien käyttö nopeutti käyttöä melkein puolittamalla ajan, mutta tulos ei siltikään ole täysin ideaali.
+
+---
